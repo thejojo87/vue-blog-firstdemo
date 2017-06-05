@@ -1,13 +1,20 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png">
+    <navbar></navbar>
     <router-view></router-view>
   </div>
 </template>
 
 <script>
+import navbar from './components/navbar.vue'
 export default {
-  name: 'app'
+  name: 'app',
+  components: {
+    navbar
+  },
+  created: function () {
+    // `this` 指向 vm 实例
+  }
 }
 </script>
 
@@ -18,6 +25,6 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  /*margin-top: 60px;*/
 }
 </style>
