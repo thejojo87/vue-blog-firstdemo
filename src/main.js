@@ -11,6 +11,7 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-default/index.css'
 import plugin from './ext/vue_ext'
 
+Vue.use(require('vue-moment'))
 Vue.use(iView)
 Vue.use(ElementUI)
 Vue.use(plugin)

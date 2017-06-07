@@ -2,19 +2,15 @@
   <div>
     <el-menu id="navbar" theme="dark" :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
       <div id="navbar-menu">
-      <el-menu-item index="1">jojo's blog</el-menu-item>
+        <el-menu-item index="1"><a href="#">jojo's blog</a></el-menu-item>
       <el-submenu index="2">
         <template slot="title">我的工作台</template>
         <el-menu-item index="2-1">选项1</el-menu-item>
         <el-menu-item index="2-2">选项2</el-menu-item>
         <el-menu-item index="2-3">选项3</el-menu-item>
       </el-submenu>
-      <el-menu-item index="3"><a href="#" target="_blank">订单管理</a></el-menu-item>
-      </div>
-      <div id="navbar-link">
-      <form class="navbar-form navbar-right">
-        <router-link :to="{name: 'Hello'}">Hello</router-link>
-      </form>
+      <el-menu-item index="3"><router-link :to="{name: 'Hello'}">Hello</router-link></el-menu-item>
+      <el-menu-item index="4"><router-link :to="{name: 'TimelinePage'}">我的足迹</router-link></el-menu-item>
       </div>
       <div class="form-group" v-if="this.getCurrentUser === ''" id="navbar-login">
         <input type="text" v-model="user.name" placeholder="用户名" class="form-control">
