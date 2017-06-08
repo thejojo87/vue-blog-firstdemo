@@ -1,8 +1,7 @@
 <template>
   <div>
   <div v-for="(articles, index_sameday) in days" :key="index_sameday">
-    <p class="content">{{ index_sameday }}</p>
-    <p class="content">{{ articles.attributes.title }}</p>
+    <p class="content"><a v-bind:href="articles.attributes.url">{{ articles.attributes.title }}</a></p>
   </div>
   </div>
 </template>
@@ -28,6 +27,8 @@
 </script>
 
 <style>
-
-<!--Todo: 需要设置css-->
+  .content{
+    color: red;
+    font-size: 15px;
+  }
 </style>

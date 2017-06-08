@@ -401,5 +401,8 @@ https://segmentfault.com/q/1010000005817587
 
 https://zhufengnodejs.github.io/doc/html/vue/Vue%E6%96%B9%E6%B3%95%E7%AF%87.html#t103.3%20%E5%B5%8C%E5%A5%97%E5%BE%AA%E7%8E%AF
 
+timeline 我选择了iview里的。
+里面的圆点和线条，用  .ivu-timeline-item-head   .ivu-timeline-item-tail
+这两个自定义
 
 
