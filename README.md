@@ -158,7 +158,7 @@ http://www.infoq.com/cn/articles/es6-in-depth-arrow-functions
 - [x] 1.头部导航栏
 
 - [x] 2.导航栏注册与登陆
-- [ ] 3.我的足迹，timeline选项
+- [x] 3.我的足迹，timeline选项
 - [ ] 4.我的图片功能
 
 ## 更新记录
@@ -166,6 +166,8 @@ http://www.infoq.com/cn/articles/es6-in-depth-arrow-functions
 2017-06-03 20:41:42 初始化
 2017-06-05 11:36:00 添加了一个插件-用来初始化leancloud的AV
 2017-06-05 23:17:34 注册与登陆功能完成
+2017-06-17 13:56:33 chrome和firefox插件完成
+2017-06-17 13:57:10 修改了time里呢，只显示登陆账号的timeline
 
 ## 流程和思路
 
@@ -404,5 +406,43 @@ https://zhufengnodejs.github.io/doc/html/vue/Vue%E6%96%B9%E6%B3%95%E7%AF%87.html
 timeline 我选择了iview里的。
 里面的圆点和线条，用  .ivu-timeline-item-head   .ivu-timeline-item-tail
 这两个自定义
+
+最终完成的样式：
+
+![mark](http://oc2aktkyz.bkt.clouddn.com/markdown/20170608/135429803.png)
+
+##### 只让登陆用户的timeline显示
+一个是，timeline数据里添加owner的point字段，表示用户。
+然后修改了查询方法，查询的时候，发送objectId来查询。
+再来，就是navbar里，登陆成功之后，调用查询，在state里存储用户数据。
+最后，在timeline里，渲染的template里，使用state里数据来查询。
+logout之后要清空state
+
+
+
+要不要为了插件开发重新写一份repo呢？
+
+插件repo地址
+
+https://github.com/thejojo87/vue-blog-timeline-addons
+
+
+#### 开发chrome插件
+参考
+
+https://segmentfault.com/a/1190000004360319
+
+http://www.jianshu.com/p/5531e2169843
+
+1. 登陆leancloud界面
+2. 用快捷键或者图标的方式保存数据
+3. 应该有个选项，默认的话，把全部的页面保存或者只保存一个
+4. 能不能同时保存到evernote？
+
+#### 开发firefox插件
+
+参考copy urls export 这个插件
+这个会在浏览器上有个图标，还有下拉菜单，
+并且tab的右键添加一个选项，可以选择只保存这个网页或者保存整个用户组
 
 

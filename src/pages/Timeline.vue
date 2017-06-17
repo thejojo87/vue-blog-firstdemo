@@ -5,7 +5,7 @@
         </p>
     <!--这里要开始渲染了-->
     <Timeline >
-      <Timeline-item v-for="(days, index) in this.readTimelineDate" :key="index">
+      <Timeline-item v-for="(days, index) in this.getTimelineDates" :key="index">
         <p class="time">{{index}}</p>
         <timelinetitles :days="days"></timelinetitles>
       </Timeline-item>
@@ -36,9 +36,17 @@
     },
     created: function () {
       // 这里初始化timeline数据-av里获取，获取并且输入到state里
-      this.actionGetTimelineDates()
+//      this.actionGetTimelineDates()
+//      console.log(this.getCurrentUser.id)
+//      this.actionGetTimelineDates(this.getCurrentUser.id)
     },
     watch: {
+      getCurrentUser: function (val, oldVal) {
+        console.log('new: %s, old: %s', val, oldVal)
+        console.log('zai timeline里user变化了' + val)
+        console.log(val)
+        this.actionGetTimelineDates(val.id)
+      },
       getTimelineDates: function (val, oldVal) {
         console.log('new: %s, old: %s', val, oldVal)
         console.log(val)
@@ -56,7 +64,8 @@
       ...mapGetters({
         // 获取state.readTimelineDates
         getTimelineDates: 'getTimelineDates',
-        getTimelineTimes: 'getTimelineTimes'
+        getTimelineTimes: 'getTimelineTimes',
+        getCurrentUser: 'getCurrentUser'
       })
     },
     methods: {

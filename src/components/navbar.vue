@@ -115,7 +115,9 @@
     methods: {
       ...mapActions([
         'actionSaveCurrentUser',
-        'actionInitCurrentUser'
+        'actionInitCurrentUser',
+        'actionGetTimelineDates',
+        'actionInitCurrentTimelineDate'
       ]),
       resetForm (formName) {
         this.$refs[formName].resetFields()
@@ -154,6 +156,9 @@
           this.AV.User.logIn(this.user.name, this.user.password).then((loginedUser) => {
             console.log('登录成功')
             this.actionSaveCurrentUser(this.AV.User.current())
+            // 在这里要初始化timeline才可以
+            // 同样初始化blog文章
+            this.actionGetTimelineDates(this.AV.User.current().id)
           }, function (error) {
             alert(error)
           })
@@ -172,6 +177,7 @@
       logout: function () {
         console.log('logout开始了')
         this.actionInitCurrentUser()
+        this.actionInitCurrentTimelineDate()
         this.AV.User.logOut()
       },
       // 用来操作我的工作台的，以后需要删掉 Todo

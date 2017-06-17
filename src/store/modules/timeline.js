@@ -6,7 +6,8 @@ import Vue from 'vue'
 
 const types = {
   GET_READLINEDATA: 'timeline/GET_READLINEDATA',
-  GET_READLINETIME: 'timeline/GET_READLINETIME'
+  GET_READLINETIME: 'timeline/GET_READLINETIME',
+  INIT_CURRENT_TIMELINEDATE: 'login/INIT_CURRENT_TIMELINEDATE'
 }
 const state = {
   readTimelineDates: [],
@@ -20,15 +21,23 @@ const getters = {
 
 // actions
 const actions = {
+  // 退出之后初始化state里的数据
+  actionInitCurrentTimelineDate ({ commit }) {
+    commit(types.INIT_CURRENT_TIMELINEDATE)
+  },
   // 获取我的足迹
-  actionGetTimelineDates ({ commit }) {
+  actionGetTimelineDates ({ commit }, userid) {
     var promise = new Promise(function (resolve, reject) {
       // 这里编写异步代码
       const AV = leancloud.AVinit()
       const query = new AV.Query('ReadInfo')
+      const ownerid = AV.Object.createWithoutData('_User', userid)
       query.ascending('createdAt')
+      query.limit(1000)
+      query.equalTo('owner', ownerid)
       query.find().then((results) => {
         console.log('timeline数据下载完毕')
+        console.log(results.length)
         resolve(results)
       }, function (error) {
         console.log(error)
@@ -75,6 +84,10 @@ const actions = {
 
 // mutations
 const mutations = {
+  [types.INIT_CURRENT_TIMELINEDATE] (state) {
+    state.readTimelineTimes = []
+    state.readTimelineDates = []
+  },
   [types.GET_READLINEDATA] (state, timelinedates) {
     state.readTimelineDates = timelinedates
   },
