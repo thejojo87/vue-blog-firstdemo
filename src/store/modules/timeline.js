@@ -1,13 +1,17 @@
 /**
  * Created by thejojo on 2017/6/6.
  */
-import leancloud from '@/service/leancloud'
+import * as leancloud from '@/service/leancloud'
+import * as dataChange from '@/service/timeline'
 import Vue from 'vue'
+// import * as test from '@/service/test'
 
 const types = {
   GET_READLINEDATA: 'timeline/GET_READLINEDATA',
   GET_READLINETIME: 'timeline/GET_READLINETIME',
-  INIT_CURRENT_TIMELINEDATE: 'login/INIT_CURRENT_TIMELINEDATE'
+  INIT_CURRENT_TIMELINEDATE: 'timeline/INIT_CURRENT_TIMELINEDATE',
+  DELETE_TIMELINE: 'timeline/DELETE_TIMELINE',
+  CHANGE_TIMELINE: 'timeline/CHANGE_TIMELINE'
 }
 const state = {
   readTimelineDates: [],
@@ -27,63 +31,99 @@ const actions = {
   },
   // 获取我的足迹
   actionGetTimelineDates ({ commit }, userid) {
-    var promise = new Promise(function (resolve, reject) {
+    const promise = new Promise(function (resolve, reject) {
       // 这里编写异步代码
-      const AV = leancloud.AVinit()
-      const query = new AV.Query('ReadInfo')
-      const ownerid = AV.Object.createWithoutData('_User', userid)
-      query.ascending('createdAt')
-      query.limit(1000)
-      query.equalTo('owner', ownerid)
-      query.find().then((results) => {
-        console.log('timeline数据下载完毕')
-        console.log(results.length)
-        resolve(results)
-      }, function (error) {
-        console.log(error)
-        reject(error)
+      leancloud.getTimeline(userid, (backresult, result) => {
+        if (result === 'success') {
+          resolve(backresult)
+        } else {
+          reject(backresult)
+        }
       })
     })
     promise.then(function (data) {
       console.log('获取数据成功了')
-      console.log(typeof data)
-      console.log(data)
-      // 在此处把数据分成相同日期的字典
-      // keys字典存放的是日期集合的字典，关键字就是日期
-      // dates数组存放的是所有日期的集合
-      // values字典存放的是真正的数据，关键字就是日期
-      const keys = {}
-      const dates = []
-      const values = {}
-      for (let i = data.length - 1; i >= 0; i--) {
-        // 数组里首先取一个数，加工后获取它的日期
-        const key = Vue.prototype.$formatDate(data[i].createdAt, 'yyyy-MM-dd')
-        const value = keys[key]
-        if (!value) {
-          keys[key] = key
-          dates.push(key)
-          values[key] = []
-          values[key].push(data[i])
-        } else {
-          values[key].push(data[i])
-        }
-        console.log(key)
-      }
-      // 这是要把字典日期给排序
-      const keyAttr = Object.keys(keys).sort(function (a, b) {
-        return new Date(b) - new Date(a)
-      })
-      commit(types.GET_READLINETIME, keyAttr)
-      commit(types.GET_READLINEDATA, values)
+      const result = dataChange.dateToTimelines(data)
+      commit(types.GET_READLINETIME, result['days'])
+      commit(types.GET_READLINEDATA, result['dates'])
     }, function (error) {
       console.log(error)
       console.log('出了什么错误')
     })
+  },
+  // 更改阅读状态
+  actionChangeTimeline ({ commit }, timeline) {
+    console.log(timeline)
+    const promise = new Promise(function (resolve, reject) {
+      leancloud.changeTimeline(timeline, (backresult, result) => {
+        if (result === 'success') {
+          resolve(timeline)
+        } else {
+          reject(backresult)
+        }
+      })
+    })
+    promise.then(function (data) {
+      let key = Vue.prototype.$formatDate(data.createdAt, 'yyyy-MM-dd')
+      // 用循环的方式找到数据并且删除
+      state.readTimelineDates[key].forEach(function (value) {
+        if (data.id === value.id) {
+          let timeline = {
+            _key: key,
+            _value: value
+          }
+          commit(types.CHANGE_TIMELINE, timeline)
+        }
+      })
+    }, function (error) {
+      console.log(error)
+      console.log('修改状态出了什么错误')
+    })
+  },
+  // 删除timeline
+  actionDeleteTimeline ({ commit }, timeline) {
+    const promise = new Promise(function (resolve, reject) {
+      leancloud.deleteTimeline(timeline.id, (backresult, result) => {
+        if (result === 'success') {
+          resolve(timeline)
+        } else {
+          reject(backresult)
+        }
+      })
+    })
+    promise.then(function (data) {
+      // 这里要commit state里的数据
+      let key = Vue.prototype.$formatDate(data.createdAt, 'yyyy-MM-dd')
+      // 用循环的方式找到数据并且删除
+      state.readTimelineDates[key].forEach(function (value) {
+        if (data.id === value.id) {
+          let timeline = {
+            _key: key,
+            _value: value
+          }
+          commit(types.CHANGE_TIMELINE, timeline)
+        }
+      })
+    }, function (error) {
+      console.log(error)
+    })
+  // })
   }
 }
 
 // mutations
 const mutations = {
+  [types.DELETE_TIMELINE] (state, timeline) {
+    state.readTimelineDates[timeline._key] = state.readTimelineDates[timeline._key].filter(function (el) {
+      return el.id !== timeline._value.id
+    })
+  },
+  [types.CHANGE_TIMELINE] (state, timeline) {
+    const tochange = state.readTimelineDates[timeline._key].filter(function (el) {
+      return el.id === timeline._value.id
+    })
+    tochange[0].attributes.isFinished = !tochange[0].attributes.isFinished
+  },
   [types.INIT_CURRENT_TIMELINEDATE] (state) {
     state.readTimelineTimes = []
     state.readTimelineDates = []

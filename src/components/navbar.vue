@@ -18,7 +18,7 @@
       </div>
 
       <div class="form-group" v-show="this.getCurrentUser !== ''">
-        <a class="navbar-brand">欢迎你！ {{ user.name }} </a>
+        <a class="navbar-brand">欢迎你 {{ user.name }}</a>
         <el-button type="submit" class="btn btn-success" v-on:click="logout">退出</el-button>
       </div>
         <div class="form-group" v-if="this.getCurrentUser === ''">
@@ -105,6 +105,20 @@
             { type: 'email', message: '请输入正确的邮箱地址', trigger: 'blur,change' }
           ]
         }
+      }
+    },
+    created: function () {
+      // 这里检查当前用户
+      console.log('creatednavbar')
+      let currentUser = this.AV.User.current()
+      if (currentUser != null) {
+        this.actionSaveCurrentUser(this.AV.User.current())
+        this.user.name = currentUser.attributes.username
+        // 在这里要初始化timeline才可以
+        // 同样初始化blog文章
+        this.actionGetTimelineDates(this.AV.User.current().id)
+      } else {
+        console.log('没有任何人登陆')
       }
     },
     computed: {

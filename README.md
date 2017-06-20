@@ -160,6 +160,8 @@ http://www.infoq.com/cn/articles/es6-in-depth-arrow-functions
 - [x] 2.导航栏注册与登陆
 - [x] 3.我的足迹，timeline选项
 - [ ] 4.我的图片功能
+- [ ] 5.timeline删除和改变状态
+- [] 6.cookie自动登录
 
 ## 更新记录
 
@@ -168,6 +170,7 @@ http://www.infoq.com/cn/articles/es6-in-depth-arrow-functions
 2017-06-05 23:17:34 注册与登陆功能完成
 2017-06-17 13:56:33 chrome和firefox插件完成
 2017-06-17 13:57:10 修改了time里呢，只显示登陆账号的timeline
+2017-06-21 02:32:06 登陆的navbar里，修改了creat方法，不用再重复登陆了
 
 ## 流程和思路
 
@@ -411,13 +414,53 @@ timeline 我选择了iview里的。
 
 ![mark](http://oc2aktkyz.bkt.clouddn.com/markdown/20170608/135429803.png)
 
-##### 只让登陆用户的timeline显示
+#### 只让登陆用户的timeline显示
 一个是，timeline数据里添加owner的point字段，表示用户。
 然后修改了查询方法，查询的时候，发送objectId来查询。
 再来，就是navbar里，登陆成功之后，调用查询，在state里存储用户数据。
 最后，在timeline里，渲染的template里，使用state里数据来查询。
 logout之后要清空state
 
+#### 增加改变状态和删除按钮
+首先增加样式：
+删除很好办，直接增加就行了。
+改变状态，我在想，用两种样式
+一开始想的是v-bind 判断isFinished的值，来更改按钮样式。
+但是发现，这个button没有value值。
+使用了v-if v-else很方便
+
+然后是删除操作。
+我在这里涉及到模块化了。
+两个选择。
+一个是使用leancloud.js里，集成操作。
+另一个是使用插件的方式。
+我之前这两种都使用过。
+貌似webpack就能模块化
+
+模块化，面向对象
+
+还有一个知识点是回调函数,
+重点是把一个函数作为参数发过去，然后就在那里得到结果，运行。
+
+
+```javascript
+    test.deleteTimeline(function (aaa) {
+      console.log('aaa')
+      console.log(aaa)
+    })
+    
+    export function deleteTimeline (callback) {
+      const av = avinit()
+      const query = new av.Query('ReadInfo')
+      query.find().then(function (results) {
+        console.log('test成功了' + results)
+        callback(results)
+        // 如果这样写，第二个条件将覆盖第一个条件，查询只会返回 priority = 1 的结果
+      }, function (error) {
+        console.log('貌似出了什么错误' + error)
+      })
+    }
+```
 
 
 要不要为了插件开发重新写一份repo呢？
@@ -444,5 +487,35 @@ http://www.jianshu.com/p/5531e2169843
 参考copy urls export 这个插件
 这个会在浏览器上有个图标，还有下拉菜单，
 并且tab的右键添加一个选项，可以选择只保存这个网页或者保存整个用户组
+
+#### cookie自动登录
+
+貌似有token，session，cookie三种方式。
+不过token和session都是需要和服务器加密才可以的。
+我不知道leancloud是如何做到。
+av.user.current?登陆后这个会自动保存用户资料
+貌似chrome上的插件是打开后依然自动登录的。
+我之前的登陆系统做错了。
+就是缺少navbar生成时候的判断。
+判断currentuser存在与否，如果存在，那么就该存储到store里才对。
+
+todo:
+```javascript
+var user = AV.Object.createWithoutData('_User', 'xxxxxx');
+user.fetch({
+  success: function() {
+    AV.User.become(user._sessionToken, {
+      success: function() {
+        console.log(AV.User.current())
+      }
+    });
+  }, error: function() {
+    console.log('err');
+  }
+});
+
+```
+
+#### 主页添加github链接
 
 
