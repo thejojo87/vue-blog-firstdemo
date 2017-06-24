@@ -24,7 +24,6 @@ export function dateToTimelines (data) {
     } else {
       values[key].push(data[i])
     }
-    console.log(key)
   }
   // 这是要把字典日期给排序
   const keyAttr = Object.keys(keys).sort(function (a, b) {

@@ -2,8 +2,8 @@
   <div>
     <el-menu id="navbar" theme="dark" :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
       <div id="navbar-menu">
-        <el-menu-item index="1"><a href="#">jojo's blog</a></el-menu-item>
-      <el-submenu index="2">
+        <el-menu-item index="1"><router-link :to="{name: 'Blog'}">jojo's blog</router-link></el-menu-item>
+    <el-submenu index="2">
         <template slot="title">我的工作台</template>
         <el-menu-item index="2-1">选项1</el-menu-item>
         <el-menu-item index="2-2">选项2</el-menu-item>
@@ -11,6 +11,7 @@
       </el-submenu>
       <el-menu-item index="3"><router-link :to="{name: 'Hello'}">Hello</router-link></el-menu-item>
       <el-menu-item index="4"><router-link :to="{name: 'TimelinePage'}">我的足迹</router-link></el-menu-item>
+      <el-menu-item index="5"><a href="https://github.com/thejojo87/vue-blog-firstdemo">github</a></el-menu-item>
       </div>
       <div class="form-group" v-if="this.getCurrentUser === ''" id="navbar-login">
         <input type="text" v-model="user.name" placeholder="用户名" class="form-control">
@@ -117,6 +118,7 @@
         // 在这里要初始化timeline才可以
         // 同样初始化blog文章
         this.actionGetTimelineDates(this.AV.User.current().id)
+        this.actionGetArticles(this.AV.User.current().id)
       } else {
         console.log('没有任何人登陆')
       }
@@ -131,7 +133,8 @@
         'actionSaveCurrentUser',
         'actionInitCurrentUser',
         'actionGetTimelineDates',
-        'actionInitCurrentTimelineDate'
+        'actionInitCurrentTimelineDate',
+        'actionGetArticles'
       ]),
       resetForm (formName) {
         this.$refs[formName].resetFields()
@@ -173,6 +176,7 @@
             // 在这里要初始化timeline才可以
             // 同样初始化blog文章
             this.actionGetTimelineDates(this.AV.User.current().id)
+            this.actionGetArticles(this.AV.User.current().id)
           }, function (error) {
             alert(error)
           })
@@ -205,10 +209,14 @@
 <style>
   #navbar{
     display: flex;
-    flex-wrap: nowrap;
+    /*flex-direction: row;*/
+    /*background-color: #333333;*/
+    flex:1;
+    /*width: calc(100% - 320px);*/
+    /*flex-wrap: nowrap;*/
     align-items: center;
-    justify-content: space-between;
-    /*flex-direction: column;*/
+    /*justify-content: space-between;*/
+    /*flex-direction: row;*/
   }
   .form-group {
     /*width: 400px;*/

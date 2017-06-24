@@ -160,8 +160,12 @@ http://www.infoq.com/cn/articles/es6-in-depth-arrow-functions
 - [x] 2.导航栏注册与登陆
 - [x] 3.我的足迹，timeline选项
 - [ ] 4.我的图片功能
-- [ ] 5.timeline删除和改变状态
-- [] 6.cookie自动登录
+- [x] 5.timeline删除和改变状态
+- [x] 6.cookie自动登录
+- [x] 7. blog阅读功能
+- [] 8. 支持markdown
+- [] 9. 写作和编辑
+- [] 10. 文章详情界面
 
 ## 更新记录
 
@@ -171,6 +175,8 @@ http://www.infoq.com/cn/articles/es6-in-depth-arrow-functions
 2017-06-17 13:56:33 chrome和firefox插件完成
 2017-06-17 13:57:10 修改了time里呢，只显示登陆账号的timeline
 2017-06-21 02:32:06 登陆的navbar里，修改了creat方法，不用再重复登陆了
+2017-06-24 06:51:29 完成了博客页面的设计。从leancloud读取临时的数据。
+
 
 ## 流程和思路
 
@@ -197,7 +203,7 @@ leancloud需要一个av，这个需要和初始化，之前写的时候每次都
 还有AV.User.currentuser,应该怎么保存呢？
 我直接把返回来的用户给保存在了本地state里。
 
-### api
+#### api
 leancloud使用sdk是可行的。
 但是leancloud同时拥有restapi。
 所有的应用里的数据，可以用restapi的方式可以获取。
@@ -517,5 +523,134 @@ user.fetch({
 ```
 
 #### 主页添加github链接
+
+### 使用sass
+
+http://www.jianshu.com/p/92dbc92e775d
+http://www.jianshu.com/p/67f52071657d
+
+第二步，写入地址在build里，webpack.base.conf.js
+
+http://ithelp.ithome.com.tw/articles/10126905
+教程
+
+使用的时候，可以在script import './../../static/css/techs.scss';
+也可以
+```css
+<style lang="sass" scoped>
+</style>
+
+<style lang="sass">
+    @import './css/main.scss'
+</style>
+```
+
+
+### blog模块
+pages文件夹里，新建一个Blog.vue
+然后作为组件，把sidebar插入进去。
+参考的是hexo的next主题
+
+http://theme-next.iissnan.com/theme-settings.html#author-sites
+
+http://thejojo87.com/
+
+逻辑大概是这个样子：
+如果没登陆，那么不会触发获取articles的行为。
+如果登陆成功，那么触发成功并且获取articles到vuex
+当进入blog文章界面，那么有一个articles的空数组。
+这个用来检测，mapgetters里，articlesde 数据。
+watch，vuex的getArticles方法。如果有变化那么把本地数组复制就好了。
+
+#### sidebar
+
+sidebar,实际上有两个标签页组成。
+当主页的时候，显示图像，姓名，link，友情链接等等。站点概览。
+当进入文章的时候，显示文章目录，里面有链接，有markdown文章的目录树。
+
+站点概览很好做。
+目录树，貌似需要组件来完成？
+next主题是怎么实现的呢？
+
+我需要先看一下别人的代码是怎么实现的
+https://github.com/taosin/ixinyi_admin
+
+service里的articles.js文件里，写上了leancloud获取的各种方法。
+然后在blogs.vue里，首先获取，再渲染。
+
+sidebar，如果正常情况下是随着博客往下拉，会消失不见得。
+如何固定住？
+这就需要position:fixed
+然后设置右边和高度。这样就能相对固定住了。
+
+
+#### mainbar
+mainbar，貌似里面的内容可以直接在文章页面重新使用啊。
+
+mainbar里，只显示一部分文章。
+原理是，在mainbar的content界面，写上高度160px
+然后text-overflow ellipsis 或者overflow:hidden来溢出部分裁剪。
+不知道为什么这个都没作用
+
+blog的class 是v-for 来渲染的list
+要把这个做一个hover的效果。
+这样，鼠标在文章的时候就有效果了。
+
+```css
+      transform: translateY(-2%)
+      box-shadow: 1px 4px 10px 2px #CCC
+```
+
+下一步就是搞个分页出来。
+用element的？
+还是用iview的？ 感觉iview里的好看很多
+还是之前用的浏览器插件时候的？
+
+思路是什么样的？
+思路是，分页按钮，按的时候，getters，传送数据过来，赋值给本地，然后就联动刷新
+
+state里新建一个currentPage项目，初始化为1.
+然后每当blogs页面跳转到其他模块的时候，destory对吧。
+这时候保存currentPage
+
+也不是，其实一开始下载全部数据，
+然后不用和store交互，直接渲染现在的数据不就完了吗？
+
+一开始登陆之后，下载全部数据到store，这是没有错的。
+然后，设置当前页和每一个页面显示的文章数。
+新建一个空的用来放展示的数组。
+
+页面调到其他navbar，比如timeline的时候，是重新经历一次毁灭。
+所以在created的时候，从store里，获取保存的当前页数。
+然后经过函数处理，从总数组里，取出对应页数的数据。
+
+当分页按钮按下去之后，先把当前页保存到store里，然后重新计算出display的数组。
+
+#### 文章详情-article页面
+
+如果点击标题，或者阅读全文的话，应该要跳转到文章详细界面。
+这个应该怎么做呢？
+我的想法是，博客的背景完全不动，
+就把main里的东西切换就可以了。
+但是这会涉及到单个网址的变化。
+如何在vue 代码里，跳转到另一个网址呢？
+还有，如果使用objid，作为地址的一部分参数。
+会不会不是很安全？
+但是objid是唯一的，应该方便很多才对。
+有没有加密解密的办法？
+
+还有如何获取并渲染当前的文章？
+是保存到store里？还是说作为参数传送数据？
+
+貌似vuex使用store里作为全局使用比较好。
+
+如何跳转？
+this.$router.push()
+
+首先如何匹配动态路由？比如id？
+https://router.vuejs.org/zh-cn/essentials/dynamic-matching.html
+
+如何把参数传递过去？
+
 
 

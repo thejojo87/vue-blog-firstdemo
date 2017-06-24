@@ -30,7 +30,6 @@
     },
     data () {
       return {
-        visible: false,
         readTimelineDate: []
       }
     },
@@ -42,22 +41,17 @@
     },
     watch: {
       getCurrentUser: function (val, oldVal) {
-        console.log('new: %s, old: %s', val, oldVal)
-        console.log('zai timeline里user变化了' + val)
-        console.log(val)
-        this.actionGetTimelineDates(val.id)
+//        this.actionGetTimelineDates(val.id)
       },
       getTimelineDates: function (val, oldVal) {
         console.log('new: %s, old: %s', val, oldVal)
         console.log(val)
         this.readTimelineDate = val
-        console.log(this.readTimelineDate)
       },
       getTimelineTimes: function (val, oldVal) {
         console.log('new: %s, old: %s', val, oldVal)
         console.log(val)
         this.readTimelineTimes = val
-        console.log(this.readTimelineTimes)
       }
     },
     computed: {
@@ -71,12 +65,7 @@
     methods: {
       ...mapActions([
         'actionGetTimelineDates'
-      ]),
-      show: function () {
-        this.visible = true
-        console.log(this.readTimelineDate)
-        console.log(this.visible)
-      }
+      ])
     }
   }
 </script>

@@ -82,7 +82,6 @@ MyPlugin.install = function (Vue) {
     },
     $formatDate: {
       get () {
-        console.log('formatDate开始了')
         return formatDate
       }
     },
