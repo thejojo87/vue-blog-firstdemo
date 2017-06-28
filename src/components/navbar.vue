@@ -134,7 +134,8 @@
         'actionInitCurrentUser',
         'actionGetTimelineDates',
         'actionInitCurrentTimelineDate',
-        'actionGetArticles'
+        'actionGetArticles',
+        'actionGetBooks'
       ]),
       resetForm (formName) {
         this.$refs[formName].resetFields()
@@ -177,6 +178,7 @@
             // 同样初始化blog文章
             this.actionGetTimelineDates(this.AV.User.current().id)
             this.actionGetArticles(this.AV.User.current().id)
+            this.actionGetBooks()
           }, function (error) {
             alert(error)
           })

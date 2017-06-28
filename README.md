@@ -651,6 +651,145 @@ this.$router.push()
 https://router.vuejs.org/zh-cn/essentials/dynamic-matching.html
 
 如何把参数传递过去？
+vue-router的文档里有。
+
+#### 新建文章
+
+我的想法是模仿键书的结构
+
+http://www.jianshu.com/writer#/
+
+![mark](http://oc2aktkyz.bkt.clouddn.com/markdown/20170625/150423018.png)
+
+这里需要注意的是，主页面是writer。
+但是每一个笔记，每一个文章都有自己的地址。
+按照地址的不同，会刷新网址的。
+
+新建文章的按钮，应该放在哪里呢？
+是在navbar？还是说，在blog的界面里，固定一个button？
+新建一个button固定住吧。
+elemtnt的success按钮样式很不错。
+最好跳转的时候，把用户的id传送过去。
+如果用户登陆了那么就显示。
+
+##### book的bar
+
+简书里，当进入编辑模式的时候，navbar会消失，我要不要也要这么做？
+
+第一个元素是回首页，我一开始以为这是个按钮，发现这是个i选项，加上border罢了。
+这里使用了display:block，这就变成了块状元素，所以元素会被撑大。
+但是我喜欢用flex，因此使用flex：1就一样了。
+
+第二个元素是新建文章
+按下这里的时候，简书会，向下滑动出现一个输入栏和提交，取消的表格。
+这个滑动效果相当自然。应该用jquery对吧？
+我vue应该怎么做？vue有自己的动画吗？
+
+https://cn.vuejs.org/v2/guide/transitions.html
+貌似有过度效果
+
+
+至于隐藏和出现，应该是，v-on:click="isAddBook = !isAddBook"
+默认一个本地变量为false就可以了。
+
+提交按钮按下去之后，就不应该刷新页面。
+所以需要v-on:submit.prevent="onSubmit"
+
+然后新建一个本地变量，用来储存book的名字。
+然后提交按钮，启动保存本地和新建leancloud的方法
+
+新建book应该怎么做呢？
+我想还是在vuex里做吧。
+首先启动vuex的action，那里上传，成功后再返回来操作本地数据。
+返回的数据直接存进store里就可以了。
+
+在这里我遇到一个问题，vuex，我是分了模块的。
+currentUser现在在login模块里。
+虽然我在vue文件里，是可以拿到的。
+但是我如果想在store的js文件想拿到的话，该怎么拿到呢？
+rootstate？
+https://stackoverflow.com/questions/41366388/vuex-access-state-from-another-module
+
+```javascript
+  actionCreateNewBook ({ commit, rootState }, bookname) {
+    // console.log(bookname)
+    console.log('新建开始了')
+    console.log(rootState.login.currentUser)
+```
+可以用这种方式
+
+在leancloud已经注册成功了。
+之后需要在本地展示。
+要么在本地加入数组，要么重新获取刷新一下。
+但是这样的话，就涉及到获取数据，并展示了。
+获取数据，果然还是需要在login之后做到。
+还是说，在进入写文章的界面就可以？
+
+有两种方法，一个是在login之后，统一初始化。
+另一个是在blogNew界面，创建的时候，获取数据并且渲染。
+只要监控就可以了。
+我先选择了偷懒的办法，集中到一个界面里。
+
+下一个部分就是列表了。
+active，就是被选中的样子，这时候背景色会修改，而且出现一个齿轮。
+还有个红色的border。
+这个要不要做成组件？
+还是说并不复杂，直接写在上面？
+还是做一个组件吧。
+
+列表active，一开始想的是，设置一个isactive的字段。
+每次读取或者点击的时候就更新状态。
+但是想想，这个状态，没必要保存在服务器上。
+在本地的临时变量存储就好了。
+因为一开始进入新建界面的时候，总是默认第一个book为active
+
+写css的时候，遇到一个问题：
+text-overflow: ellipsis; 无效。
+结果是因为在flex布局，父元素没有宽度造成的。
+这个解决办法是给父元素一个宽度。
+
+http://www.westerndevs.com/css/Using-Overflow-Ellipsis-in-Inline-Flex/
+
+下一步就是添加设置的图标了。
+是放在哪里好呢
+和span并行就可以了
+
+还遇到一个bug-就是bootstrap，select的时候会有蓝色边框。
+就是我选中了一个book
+然后当我鼠标离开的时候也就是blur的时候
+selected的元素下面就出现了蓝色边框
+按道理应该是当blur的时候就启动覆盖蓝色border
+发现原因了，因为我按照简书的源代码，套了一层a标签，
+href="javascript:void(0)"
+这就导致了，当离开后，这个变成了网址。
+所以有了蓝色的底部
+把href删除就没有了。
+
+设置的齿轮，我发现简书用的就是iview的图标。
+一模一样呢。
+
+下一步就是点击齿轮，就要出现一个提示，要么删除，要么修改名字
+
+popover弹出窗了。poptip -iview里。
+首先用poptip包住齿轮元素
+
+这个需要一个slot组件。
+我在想要不要再做一个组件？
+1. 再做一个组件。
+2. 直接在上面写
+
+写一个组件吧，干净一点。
+遇到了一个问题。
+标题和content里，iview源代码里设置是不一样的。
+content里，多包裹了一层div。
+这导致了修改文集名，这个我实现了和简书效果一样。
+但是下面的删除就效果不一样了。
+实在没办法，修改了父元素的padding
+
+
+
+
+#### 编辑文章
 
 
 

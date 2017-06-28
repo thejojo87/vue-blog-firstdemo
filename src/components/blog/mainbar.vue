@@ -9,7 +9,7 @@
         </div>
         <div class="tags">
           <span>标签：</span>
-          <a v-if="article.attributes.tags">{{article.attributes.tags}}</a>
+          <a v-if="article.attributes.tags"><el-tag type="primary">{{article.attributes.tags}}</el-tag></a>
         </div>
         <div class="content">
           <div>{{  article.attributes.content  }}</div>
@@ -22,6 +22,7 @@
       <div class="blog_page">
         <Page :total="this.getArticles.length" :current="this.currentPage" :page-size="this.pageSize" @on-change="handleSizeChange" show-elevator show-total></Page>
       </div>
+      <el-button v-if="getCurrentUser" @click="goNewArticle" id="new_article" type="success" icon="edit">写文章</el-button>
     </div>
   </div>
 </template>
@@ -59,7 +60,8 @@
       ...mapGetters({
         // 获取文章数目
         getArticles: 'getArticles',
-        getCurrentPage: 'getCurrentPage'
+        getCurrentPage: 'getCurrentPage',
+        getCurrentUser: 'getCurrentUser'
       })
     },
     methods: {
@@ -73,6 +75,13 @@
         const url = '/blog/articles/' + article.id
         console.log(url)
         this.actionSaveCurrentArticle(article)
+        this.$router.push(url)
+      },
+      // 跳转到新建文章界面
+      goNewArticle () {
+        const url = '/blog/new/'
+//        console.log(url)
+//        this.actionSaveCurrentArticle(article)
         this.$router.push(url)
       },
       // 当前页改变了
@@ -93,23 +102,23 @@
     /*display: flex*/
     flex: 1
     /*width: 700px*/
-    min-height: 800px
+    /*min-height: 800px*/
     font-family: Lato,"Microsoft Jhenghei","Hiragino Sans GB","Microsoft YaHei",sans-serif
     font-size: 14px
     background-color: #36465d
-    padding: 30px 30px
+    /*padding: 30px 30px*/
     .main
       display: flex
       flex-direction: column
       width: 80%
-      min-height: 800px
+      /*min-height: 800px*/
       margin: 0 auto
       margin-bottom: 20px
       text-align: left
     .blog
       display: flex
       flex-direction: column
-      background-color: #ffffff
+      background-color: #dedede
       margin: 30px 30px
       padding: 30px 30px
       .title
@@ -158,4 +167,8 @@
   .blog_page
     margin: 0 auto
     color: #dddddd
+  #new_article
+    position: fixed
+    top: 80px
+    left: 30px
 </style>

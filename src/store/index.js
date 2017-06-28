@@ -11,6 +11,7 @@ import * as getters from './getters'
 import login from './modules/login'
 import timeline from './modules/timeline'
 import articles from './modules/articles'
+import blogNew from './modules/blogNew'
 
 Vue.use(Vuex)
 
@@ -22,7 +23,8 @@ export default new Vuex.Store({
     // count,
     login,
     timeline,
-    articles
+    articles,
+    blogNew
   },
   // 嚴格模式，禁止直接修改 state
   strict: true

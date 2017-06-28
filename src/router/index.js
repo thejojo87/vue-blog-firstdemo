@@ -4,6 +4,7 @@ import Hello from '@/components/Hello'
 import TimelinePage from '@/pages/Timeline'
 import Blog from '@/pages/Blog'
 import BlogArticle from '@/pages/BlogArticle'
+import BlogNew from '@/pages/BlogNew'
 
 Vue.use(Router)
 
@@ -28,6 +29,11 @@ export default new Router({
       path: '/blog/articles/:id',
       name: 'BlogArticle',
       component: BlogArticle
+    },
+    {
+      path: '/blog/new',
+      name: 'BlogNew',
+      component: BlogNew
     }
   ]
 })
