@@ -2,13 +2,13 @@
 <div class="new_book_list" >
   <ul class="list_display" >
     <li class="book" :class="{book_active: index === activeIndex}" v-for="(book, index) in getBooks">
-      <a @click="chooseBook(index)" data-type="active" class="notebook-name">
+      <a @click="chooseBook(index, book)" data-type="active" class="notebook-name">
         <span>
           <div>{{  book.attributes.title  }}
           </div>
         </span>
         <div v-show="index === activeIndex">
-          <new-book-list-gear></new-book-list-gear>
+          <new-book-list-gear :index="index" :bookid="book.id" :bookname="book.attributes.title"></new-book-list-gear>
         </div>
       </a>
     </li>
@@ -36,9 +36,12 @@
       })
     },
     methods: {
-      ...mapActions([]),
-      chooseBook (index) {
+      ...mapActions([
+        'actionSaveCurrentBook'
+      ]),
+      chooseBook (index, book) {
         this.activeIndex = index
+        this.actionSaveCurrentBook(book)
       }
     }
   }

@@ -786,6 +786,50 @@ content里，多包裹了一层div。
 但是下面的删除就效果不一样了。
 实在没办法，修改了父元素的padding
 
+- 修改文集
+
+修改文集后的功能就只有一个输入框
+并不是跳转链接，只是一个弹窗很大100%罢了。
+![mark](http://oc2aktkyz.bkt.clouddn.com/markdown/20170628/133144322.png)
+
+感觉是对话框
+
+https://www.iviewui.com/components/modal
+
+这里提供了header和tooter的slot，可以自由定义。
+
+这就涉及到从booklist，传送过来书的名字了。
+没什么难的，就是传送数据使用 :bookname="book.attributes.title"
+这个v-bind 方式。才能传送过来。
+
+还需要传送book的id。
+
+```javascript
+    props: {
+      bookname: String,
+      bookid: String
+    },
+```
+
+但是如果直接把bookname作为变量的话，就会改变mutation，而产生冲突。
+因此还是赋值一个本地变量，create的时候直接赋值，用这个来操作。
+
+action只接受一个参数，所以应包装起来。
+
+```javascript
+        const newbookname = {
+          bookid: this.bookid,
+          bookname: this._bookname
+        }
+        this.actionChangeBookname(newbookname)
+```
+
+在leancloud修改完了之后，就是需要在本地修改。
+有两种思路，一个是，直接在books数组里搜索。
+另一个是新建一个currentbook，专门保存这个，然后修改这个。
+第二个方法感觉比较好。
+
+肯定以后有需要当前book的地方，所以用这个方式比较好。
 
 
 

@@ -11,10 +11,6 @@
       </Timeline-item>
     </Timeline>
 
-  <!--<el-button @click="show">按钮</el-button>-->
-  <!--<el-dialog v-model="visible" title="Hello world">-->
-    <!--<p>欢迎使用 Element</p>-->
-  <!--</el-dialog>-->
   </div>
 </template>
 

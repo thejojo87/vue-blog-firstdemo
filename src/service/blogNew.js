@@ -13,6 +13,30 @@ export function avinit () {
   return AV
 }
 
+export function deleteBook (bookdata, callback) {
+  const deletebook = av.Object.createWithoutData('books', bookdata.bookid)
+  deletebook.destroy().then(function (results) {
+    // 删除成功
+    callback(results, 'success')
+  }, function (error) {
+    // 删除失败
+    callback(error, 'error')
+  })
+}
+
+export function changeBookname (bookdata, callback) {
+  console.log('changeBookname')
+  const newName = av.Object.createWithoutData('books', bookdata.bookid)
+  newName.set('title', bookdata.bookname)
+  newName.save().then((results) => {
+    console.log('新建book完毕了')
+    callback(results, 'success')
+  }, function (error) {
+    console.log(error)
+    callback(error, 'error')
+  })
+}
+
 export function createNewBook (userid, bookname, callback) {
   console.log(userid)
   console.log(bookname)
