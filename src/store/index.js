@@ -12,6 +12,7 @@ import login from './modules/login'
 import timeline from './modules/timeline'
 import articles from './modules/articles'
 import blogNew from './modules/blogNew'
+import blogNewArticle from './modules/blogNewArticle'
 
 Vue.use(Vuex)
 
@@ -24,7 +25,8 @@ export default new Vuex.Store({
     login,
     timeline,
     articles,
-    blogNew
+    blogNew,
+    blogNewArticle
   },
   // 嚴格模式，禁止直接修改 state
   strict: true

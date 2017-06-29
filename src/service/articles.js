@@ -15,14 +15,12 @@ export function avinit () {
 export function getArticles (userid, callback) {
   const query = new av.Query('Articles')
   const ownerid = av.Object.createWithoutData('_User', userid)
-  query.ascending('createdAt')
-  query.limit(1000)
+  query.descending('createdAt')
+  query.limit(500)
   query.equalTo('owner', ownerid)
   query.find().then((results) => {
-    console.log('articles数据下载完毕')
     callback(results, 'success')
   }, function (error) {
-    console.log(error)
     callback(error, 'error')
   })
 }

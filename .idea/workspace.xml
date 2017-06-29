@@ -5,12 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="dc9789d5-02b7-418f-884f-dd950810e2e5" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/components/blog/newArticleBar.vue" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/service/blogNewArticle.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/store/modules/blogNewArticle.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/README.md" afterPath="$PROJECT_DIR$/README.md" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/blog/newBookList.vue" afterPath="$PROJECT_DIR$/src/components/blog/newBookList.vue" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/blog/newBookListGear.vue" afterPath="$PROJECT_DIR$/src/components/blog/newBookListGear.vue" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/pages/Timeline.vue" afterPath="$PROJECT_DIR$/src/pages/Timeline.vue" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/service/blogNew.js" afterPath="$PROJECT_DIR$/src/service/blogNew.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/blog/newBookBar.vue" afterPath="$PROJECT_DIR$/src/components/blog/newBookBar.vue" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/navbar.vue" afterPath="$PROJECT_DIR$/src/components/navbar.vue" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/pages/BlogNew.vue" afterPath="$PROJECT_DIR$/src/pages/BlogNew.vue" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/service/articles.js" afterPath="$PROJECT_DIR$/src/service/articles.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/store/index.js" afterPath="$PROJECT_DIR$/src/store/index.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/store/modules/articles.js" afterPath="$PROJECT_DIR$/src/store/modules/articles.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/store/modules/blogNew.js" afterPath="$PROJECT_DIR$/src/store/modules/blogNew.js" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
@@ -28,79 +33,22 @@
     <splitter split-orientation="horizontal" split-proportion="0.46877787">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
-          <file leaf-file-name="leancloud.js" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/service/leancloud.js">
+          <file leaf-file-name="newArticleBar.vue" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/components/blog/newArticleBar.vue">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="393">
-                  <caret line="17" column="0" lean-forward="false" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
+                <state relative-caret-position="1170">
+                  <caret line="30" column="26" lean-forward="false" selection-start-line="30" selection-start-column="26" selection-end-line="30" selection-end-column="26" />
                   <folding />
                 </state>
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="timelinetitles.vue" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/components/timelinetitles.vue">
+          <file leaf-file-name="blogNew.js" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/service/blogNew.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="585">
-                  <caret line="35" column="0" lean-forward="false" selection-start-line="35" selection-start-column="0" selection-end-line="35" selection-end-column="0" />
+                <state relative-caret-position="2262">
+                  <caret line="60" column="30" lean-forward="false" selection-start-line="60" selection-start-column="30" selection-end-line="60" selection-end-column="30" />
                   <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="BlogArticle.vue" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/pages/BlogArticle.vue">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="-1167">
-                  <caret line="28" column="0" lean-forward="false" selection-start-line="28" selection-start-column="0" selection-end-line="28" selection-end-column="0" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="Timeline.vue" pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/src/pages/Timeline.vue">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="-639">
-                  <caret line="12" column="0" lean-forward="true" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="BlogNew.vue" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/pages/BlogNew.vue">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="1092">
-                  <caret line="29" column="29" lean-forward="false" selection-start-line="29" selection-start-column="29" selection-end-line="29" selection-end-column="29" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="navbar.vue" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/components/navbar.vue">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="1992">
-                  <caret line="180" column="33" lean-forward="true" selection-start-line="180" selection-start-column="33" selection-end-line="180" selection-end-column="33" />
-                  <folding>
-                    <element signature="e#3138#3367#0" expanded="false" />
-                    <element signature="e#3579#3685#0" expanded="false" />
-                    <element signature="e#3771#4523#0" expanded="false" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="sidebar.vue" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/components/blog/sidebar.vue">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="-114">
-                  <caret line="105" column="6" lean-forward="false" selection-start-line="105" selection-start-column="6" selection-end-line="105" selection-end-column="6" />
-                  <folding>
-                    <element signature="n#div#1;n#div#0;n#template#0;n#!!top" expanded="false" />
-                    <element signature="n#div#2;n#div#0;n#template#0;n#!!top" expanded="false" />
-                  </folding>
                 </state>
               </provider>
             </entry>
@@ -108,7 +56,7 @@
           <file leaf-file-name="Hello.vue" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/components/Hello.vue">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="39">
+                <state relative-caret-position="936">
                   <caret line="24" column="0" lean-forward="false" selection-start-line="24" selection-start-column="0" selection-end-line="24" selection-end-column="0" />
                   <folding />
                 </state>
@@ -118,8 +66,8 @@
           <file leaf-file-name="mainbar.vue" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/components/blog/mainbar.vue">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="-1599">
-                  <caret line="42" column="0" lean-forward="false" selection-start-line="42" selection-start-column="0" selection-end-line="42" selection-end-column="0" />
+                <state relative-caret-position="156">
+                  <caret line="4" column="22" lean-forward="false" selection-start-line="4" selection-start-column="22" selection-end-line="4" selection-end-column="22" />
                   <folding>
                     <element signature="e#1161#1206#0" expanded="true" />
                   </folding>
@@ -127,12 +75,26 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="Blog.vue" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/pages/Blog.vue">
+          <file leaf-file-name="newBookList.vue" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/components/blog/newBookList.vue">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="-156">
-                  <caret line="14" column="0" lean-forward="false" selection-start-line="14" selection-start-column="0" selection-end-line="17" selection-end-column="6" />
+                <state relative-caret-position="1287">
+                  <caret line="34" column="8" lean-forward="false" selection-start-line="34" selection-start-column="8" selection-end-line="34" selection-end-column="8" />
                   <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="navbar.vue" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/src/components/navbar.vue">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="315">
+                  <caret line="179" column="35" lean-forward="false" selection-start-line="179" selection-start-column="35" selection-end-line="179" selection-end-column="35" />
+                  <folding>
+                    <element signature="e#3138#3367#0" expanded="false" />
+                    <element signature="e#3579#3685#0" expanded="false" />
+                    <element signature="e#3771#4523#0" expanded="false" />
+                  </folding>
                 </state>
               </provider>
             </entry>
@@ -144,18 +106,18 @@
           <file leaf-file-name="blogNew.js" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/store/modules/blogNew.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="2442">
-                  <caret line="122" column="45" lean-forward="false" selection-start-line="122" selection-start-column="45" selection-end-line="122" selection-end-column="45" />
+                <state relative-caret-position="133">
+                  <caret line="56" column="0" lean-forward="false" selection-start-line="56" selection-start-column="0" selection-end-line="56" selection-end-column="0" />
                   <folding />
                 </state>
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="blogNew.js" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/service/blogNew.js">
+          <file leaf-file-name="articles.js" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/store/modules/articles.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="351">
-                  <caret line="18" column="11" lean-forward="true" selection-start-line="18" selection-start-column="11" selection-end-line="18" selection-end-column="11" />
+                <state relative-caret-position="39">
+                  <caret line="39" column="58" lean-forward="false" selection-start-line="39" selection-start-column="58" selection-end-line="39" selection-end-column="58" />
                   <folding />
                 </state>
               </provider>
@@ -165,38 +127,39 @@
             <entry file="file://$PROJECT_DIR$/README.md">
               <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
                 <state split_layout="SPLIT">
-                  <first_editor relative-caret-position="556">
-                    <caret line="832" column="0" lean-forward="true" selection-start-line="832" selection-start-column="0" selection-end-line="832" selection-end-column="0" />
+                  <first_editor relative-caret-position="634">
+                    <caret line="893" column="0" lean-forward="true" selection-start-line="893" selection-start-column="0" selection-end-line="893" selection-end-column="0" />
                     <folding>
-                      <marker date="1498664041371" expanded="true" signature="899:954" ph="..." />
-                      <marker date="1498664041371" expanded="true" signature="957:977" ph="//..." />
-                      <marker date="1498664041371" expanded="true" signature="985:1060" ph="..." />
-                      <marker date="1498664041371" expanded="true" signature="1722:1821" ph="{...}" />
-                      <marker date="1498664041371" expanded="true" signature="1737:1817" ph="{...}" />
-                      <marker date="1498664041371" expanded="true" signature="1752:1811" ph="{...}" />
-                      <marker date="1498664041371" expanded="true" signature="1902:2125" ph="{...}" />
-                      <marker date="1498664041371" expanded="true" signature="1931:2123" ph="{...}" />
-                      <marker date="1498664041371" expanded="true" signature="1935:2025" ph="/*...*/" />
-                      <marker date="1498664041371" expanded="true" signature="2206:2317" ph="{...}" />
-                      <marker date="1498664041371" expanded="true" signature="2256:2313" ph="{...}" />
-                      <marker date="1498664041371" expanded="true" signature="4596:4632" ph="{...}" />
-                      <marker date="1498664041371" expanded="true" signature="6827:6943" ph="//..." />
-                      <marker date="1498664041371" expanded="true" signature="7062:7438" ph="{...}" />
-                      <marker date="1498664041371" expanded="true" signature="7226:7352" ph="{...}" />
-                      <marker date="1498664041371" expanded="true" signature="7358:7405" ph="{...}" />
-                      <marker date="1498664041371" expanded="true" signature="7521:7571" ph="{...}" />
-                      <marker date="1498664041371" expanded="true" signature="8930:8985" ph="{...}" />
-                      <marker date="1498664041371" expanded="true" signature="9038:9360" ph="{...}" />
-                      <marker date="1498664041371" expanded="true" signature="9154:9285" ph="{...}" />
-                      <marker date="1498664041371" expanded="true" signature="9304:9353" ph="{...}" />
-                      <marker date="1498664041371" expanded="true" signature="10064:10268" ph="{...}" />
-                      <marker date="1498664041371" expanded="true" signature="10088:10217" ph="{...}" />
-                      <marker date="1498664041371" expanded="true" signature="10129:10211" ph="{...}" />
-                      <marker date="1498664041371" expanded="true" signature="10157:10205" ph="{...}" />
-                      <marker date="1498664041371" expanded="true" signature="10237:10266" ph="{...}" />
-                      <marker date="1498664041371" expanded="true" signature="13679:13779" ph="{...}" />
-                      <marker date="1498664041371" expanded="true" signature="15274:15326" ph="{...}" />
-                      <marker date="1498664041371" expanded="true" signature="15477:15554" ph="{...}" />
+                      <marker date="1498729792704" expanded="true" signature="899:954" ph="..." />
+                      <marker date="1498729792704" expanded="true" signature="957:977" ph="//..." />
+                      <marker date="1498729792704" expanded="true" signature="985:1060" ph="..." />
+                      <marker date="1498729792704" expanded="true" signature="1722:1821" ph="{...}" />
+                      <marker date="1498729792704" expanded="true" signature="1737:1817" ph="{...}" />
+                      <marker date="1498729792704" expanded="true" signature="1752:1811" ph="{...}" />
+                      <marker date="1498729792704" expanded="true" signature="1902:2125" ph="{...}" />
+                      <marker date="1498729792704" expanded="true" signature="1931:2123" ph="{...}" />
+                      <marker date="1498729792704" expanded="true" signature="1935:2025" ph="/*...*/" />
+                      <marker date="1498729792704" expanded="true" signature="2206:2317" ph="{...}" />
+                      <marker date="1498729792704" expanded="true" signature="2256:2313" ph="{...}" />
+                      <marker date="1498729792704" expanded="true" signature="4705:4741" ph="{...}" />
+                      <marker date="1498729792704" expanded="true" signature="6936:7052" ph="//..." />
+                      <marker date="1498729792704" expanded="true" signature="7171:7547" ph="{...}" />
+                      <marker date="1498729792704" expanded="true" signature="7335:7461" ph="{...}" />
+                      <marker date="1498729792704" expanded="true" signature="7467:7514" ph="{...}" />
+                      <marker date="1498729792704" expanded="true" signature="7630:7680" ph="{...}" />
+                      <marker date="1498729792704" expanded="true" signature="9039:9094" ph="{...}" />
+                      <marker date="1498729792704" expanded="true" signature="9147:9469" ph="{...}" />
+                      <marker date="1498729792704" expanded="true" signature="9263:9394" ph="{...}" />
+                      <marker date="1498729792704" expanded="true" signature="9413:9462" ph="{...}" />
+                      <marker date="1498729792704" expanded="true" signature="10173:10377" ph="{...}" />
+                      <marker date="1498729792704" expanded="true" signature="10197:10326" ph="{...}" />
+                      <marker date="1498729792704" expanded="true" signature="10238:10320" ph="{...}" />
+                      <marker date="1498729792704" expanded="true" signature="10266:10314" ph="{...}" />
+                      <marker date="1498729792704" expanded="true" signature="10346:10375" ph="{...}" />
+                      <marker date="1498729792704" expanded="true" signature="13788:13888" ph="{...}" />
+                      <marker date="1498729792704" expanded="true" signature="15383:15435" ph="{...}" />
+                      <marker date="1498729792704" expanded="true" signature="15586:15663" ph="{...}" />
+                      <marker date="1498729792704" expanded="true" signature="16721:16770" ph="{...}" />
                     </folding>
                   </first_editor>
                   <second_editor />
@@ -204,26 +167,12 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="newBookList.vue" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/components/blog/newBookList.vue">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="312">
-                  <caret line="8" column="15" lean-forward="true" selection-start-line="8" selection-start-column="15" selection-end-line="8" selection-end-column="15" />
-                  <folding>
-                    <element signature="e#587#632#0" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="newBookListGear.vue" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/components/blog/newBookListGear.vue">
+          <file leaf-file-name="blogNewArticle.js" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/store/modules/blogNewArticle.js">
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="351">
-                  <caret line="108" column="18" lean-forward="false" selection-start-line="108" selection-start-column="18" selection-end-line="108" selection-end-column="18" />
-                  <folding>
-                    <element signature="n#style#0;n#Input#0;n#p#1;n#Modal#0;n#Poptip#0;n#template#0;n#!!top" expanded="true" />
-                  </folding>
+                  <caret line="92" column="48" lean-forward="false" selection-start-line="92" selection-start-column="48" selection-end-line="92" selection-end-column="48" />
+                  <folding />
                 </state>
               </provider>
             </entry>
@@ -236,8 +185,8 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="HTML File" />
-        <option value="JavaScript File" />
         <option value="vue File" />
+        <option value="JavaScript File" />
       </list>
     </option>
   </component>
@@ -256,6 +205,7 @@
       <find>changeName</find>
       <find>isDeleteBook</find>
       <find>deleteBookStart</find>
+      <find>current_book_articles</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -288,25 +238,28 @@
         <option value="$PROJECT_DIR$/static/css/blogs.scss" />
         <option value="$PROJECT_DIR$/src/components/blog/sidebar.vue" />
         <option value="$PROJECT_DIR$/src/pages/Blog.vue" />
-        <option value="$PROJECT_DIR$/src/service/articles.js" />
         <option value="$PROJECT_DIR$/static/css/blog-article.scss" />
-        <option value="$PROJECT_DIR$/src/store/modules/articles.js" />
         <option value="$PROJECT_DIR$/static/css/blog-article.sass" />
         <option value="$PROJECT_DIR$/src/pages/BlogArticle.vue" />
         <option value="$PROJECT_DIR$/src/components/blog/mainbar.vue" />
         <option value="$PROJECT_DIR$/src/router/index.js" />
         <option value="$PROJECT_DIR$/src/App.vue" />
         <option value="$PROJECT_DIR$/src/store/getters.js" />
-        <option value="$PROJECT_DIR$/src/store/index.js" />
-        <option value="$PROJECT_DIR$/src/components/navbar.vue" />
-        <option value="$PROJECT_DIR$/src/pages/BlogNew.vue" />
-        <option value="$PROJECT_DIR$/src/components/blog/newBookBar.vue" />
         <option value="$PROJECT_DIR$/static/css/bootstrap.css" />
         <option value="$PROJECT_DIR$/src/pages/Timeline.vue" />
         <option value="$PROJECT_DIR$/src/components/blog/newBookList.vue" />
         <option value="$PROJECT_DIR$/src/components/blog/newBookListGear.vue" />
         <option value="$PROJECT_DIR$/src/service/blogNew.js" />
+        <option value="$PROJECT_DIR$/src/components/blog/newBookBar.vue" />
+        <option value="$PROJECT_DIR$/src/pages/BlogNew.vue" />
+        <option value="$PROJECT_DIR$/src/store/index.js" />
+        <option value="$PROJECT_DIR$/src/components/blog/newArticleBar.vue" />
+        <option value="$PROJECT_DIR$/src/service/blogNewArticle.js" />
+        <option value="$PROJECT_DIR$/src/store/modules/articles.js" />
+        <option value="$PROJECT_DIR$/src/components/navbar.vue" />
         <option value="$PROJECT_DIR$/src/store/modules/blogNew.js" />
+        <option value="$PROJECT_DIR$/src/store/modules/blogNewArticle.js" />
+        <option value="$PROJECT_DIR$/src/service/articles.js" />
         <option value="$PROJECT_DIR$/README.md" />
       </list>
     </option>
@@ -444,7 +397,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scratches" />
       <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
@@ -640,6 +592,7 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -766,12 +719,14 @@
       <workItem from="1497868499395" duration="64088000" />
       <workItem from="1498222475827" duration="37083000" />
       <workItem from="1498357393095" duration="90538000" />
-      <workItem from="1498644883456" duration="10595000" />
+      <workItem from="1498644883456" duration="11494000" />
+      <workItem from="1498698776375" duration="18465000" />
+      <workItem from="1498725115239" duration="3750000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="398229000" />
+    <option name="totallyTimeSpent" value="421343000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="4471" y="-9" width="2578" height="1408" extended-state="6" />
@@ -827,27 +782,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/store/mutations.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/lib/JavaScriptLanguage.jar!/com/intellij/lang/javascript/index/predefined/DHTML.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="303">
-          <caret line="1219" column="0" lean-forward="false" selection-start-line="1219" selection-start-column="0" selection-end-line="1219" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/node_modules/leancloud-storage/dist/av-live-query.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="615">
-          <caret line="10734" column="12" lean-forward="false" selection-start-line="10734" selection-start-column="4" selection-end-line="10734" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../../../ToDO.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="SPLIT">
@@ -871,7 +805,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-4729">
           <caret line="10245" column="38" lean-forward="false" selection-start-line="10245" selection-start-column="38" selection-end-line="10245" selection-end-column="38" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -949,7 +882,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="858">
           <caret line="22" column="4" lean-forward="false" selection-start-line="22" selection-start-column="4" selection-end-line="22" selection-end-column="4" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -968,17 +900,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/store/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="315">
-          <caret line="22" column="12" lean-forward="false" selection-start-line="22" selection-start-column="12" selection-end-line="22" selection-end-column="12" />
-          <folding>
-            <element signature="e#43#64#0" expanded="false" />
-            <element signature="e#189#224#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/store/getters.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="156">
@@ -990,19 +911,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="243">
           <caret line="23" column="13" lean-forward="false" selection-start-line="23" selection-start-column="13" selection-end-line="23" selection-end-column="13" />
-          <folding>
-            <element signature="e#0#21#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/store/modules/timeline.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="195">
-          <caret line="7" column="0" lean-forward="true" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
-          <folding>
-            <element signature="e#43#91#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1017,7 +925,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="118053">
           <caret line="3027" column="17" lean-forward="false" selection-start-line="3027" selection-start-column="17" selection-end-line="3027" selection-end-column="17" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1046,7 +953,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="768">
           <caret line="4567" column="4" lean-forward="false" selection-start-line="4567" selection-start-column="4" selection-end-line="4567" selection-end-column="4" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1058,65 +964,33 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/blog/newBookBar.vue">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="819">
-          <caret line="50" column="20" lean-forward="false" selection-start-line="50" selection-start-column="20" selection-end-line="50" selection-end-column="20" />
-          <folding>
-            <element signature="e#981#1026#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/blog/mainbar.vue">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1599">
-          <caret line="42" column="0" lean-forward="false" selection-start-line="42" selection-start-column="0" selection-end-line="42" selection-end-column="0" />
-          <folding>
-            <element signature="e#1161#1206#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/service/leancloud.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="393">
+        <state relative-caret-position="585">
           <caret line="17" column="0" lean-forward="false" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/timelinetitles.vue">
+    <entry file="file://$PROJECT_DIR$/src/components/Hello.vue">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="585">
-          <caret line="35" column="0" lean-forward="false" selection-start-line="35" selection-start-column="0" selection-end-line="35" selection-end-column="0" />
+        <state relative-caret-position="936">
+          <caret line="24" column="0" lean-forward="false" selection-start-line="24" selection-start-column="0" selection-end-line="24" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/navbar.vue">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1992">
-          <caret line="180" column="33" lean-forward="true" selection-start-line="180" selection-start-column="33" selection-end-line="180" selection-end-column="33" />
-          <folding>
-            <element signature="e#3138#3367#0" expanded="false" />
-            <element signature="e#3579#3685#0" expanded="false" />
-            <element signature="e#3771#4523#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/Hello.vue">
+    <entry file="file://$PROJECT_DIR$/src/pages/BlogArticle.vue">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="39">
-          <caret line="24" column="0" lean-forward="false" selection-start-line="24" selection-start-column="0" selection-end-line="24" selection-end-column="0" />
+          <caret line="28" column="0" lean-forward="false" selection-start-line="28" selection-start-column="0" selection-end-line="28" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/components/blog/sidebar.vue">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-114">
+        <state relative-caret-position="2106">
           <caret line="105" column="6" lean-forward="false" selection-start-line="105" selection-start-column="6" selection-end-line="105" selection-end-column="6" />
           <folding>
             <element signature="n#div#1;n#div#0;n#template#0;n#!!top" expanded="false" />
@@ -1125,69 +999,48 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/pages/Blog.vue">
+    <entry file="file://$PROJECT_DIR$/src/pages/Timeline.vue">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-156">
-          <caret line="14" column="0" lean-forward="false" selection-start-line="14" selection-start-column="0" selection-end-line="17" selection-end-column="6" />
-          <folding />
+        <state relative-caret-position="39">
+          <caret line="12" column="0" lean-forward="false" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/pages/BlogArticle.vue">
+    <entry file="file://$PROJECT_DIR$/src/components/timelinetitles.vue">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1167">
-          <caret line="28" column="0" lean-forward="false" selection-start-line="28" selection-start-column="0" selection-end-line="28" selection-end-column="0" />
-          <folding />
+        <state relative-caret-position="585">
+          <caret line="35" column="0" lean-forward="false" selection-start-line="35" selection-start-column="0" selection-end-line="35" selection-end-column="0" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/pages/BlogNew.vue">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1092">
-          <caret line="29" column="29" lean-forward="false" selection-start-line="29" selection-start-column="29" selection-end-line="29" selection-end-column="29" />
-          <folding />
+        <state relative-caret-position="117">
+          <caret line="3" column="19" lean-forward="false" selection-start-line="3" selection-start-column="19" selection-end-line="3" selection-end-column="19" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/pages/Timeline.vue">
+    <entry file="file://$PROJECT_DIR$/src/pages/Blog.vue">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-639">
-          <caret line="12" column="0" lean-forward="true" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
-          <folding />
+        <state relative-caret-position="39">
+          <caret line="14" column="0" lean-forward="false" selection-start-line="14" selection-start-column="0" selection-end-line="17" selection-end-column="6" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/service/articles.js">
+    <entry file="file://$PROJECT_DIR$/src/components/blog/mainbar.vue">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="468">
-          <caret line="14" column="0" lean-forward="false" selection-start-line="14" selection-start-column="0" selection-end-line="27" selection-end-column="1" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/store/modules/articles.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="975">
-          <caret line="69" column="0" lean-forward="false" selection-start-line="69" selection-start-column="0" selection-end-line="69" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/blog/newBookList.vue">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="312">
-          <caret line="8" column="15" lean-forward="true" selection-start-line="8" selection-start-column="15" selection-end-line="8" selection-end-column="15" />
+        <state relative-caret-position="156">
+          <caret line="4" column="22" lean-forward="false" selection-start-line="4" selection-start-column="22" selection-end-line="4" selection-end-column="22" />
           <folding>
-            <element signature="e#587#632#0" expanded="true" />
+            <element signature="e#1161#1206#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/service/blogNew.js">
+    <entry file="file://$PROJECT_DIR$/src/store/index.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="351">
-          <caret line="18" column="11" lean-forward="true" selection-start-line="18" selection-start-column="11" selection-end-line="18" selection-end-column="11" />
-          <folding />
+        <state relative-caret-position="939">
+          <caret line="28" column="18" lean-forward="false" selection-start-line="28" selection-start-column="18" selection-end-line="28" selection-end-column="18" />
         </state>
       </provider>
     </entry>
@@ -1196,15 +1049,101 @@
         <state relative-caret-position="351">
           <caret line="108" column="18" lean-forward="false" selection-start-line="108" selection-start-column="18" selection-end-line="108" selection-end-column="18" />
           <folding>
-            <element signature="n#style#0;n#Input#0;n#p#1;n#Modal#0;n#Poptip#0;n#template#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#Input#0;n#p#1;n#Modal#0;n#Poptip#0;n#template#0;n#!!top" expanded="false" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/blog/newBookBar.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="663">
+          <caret line="56" column="50" lean-forward="true" selection-start-line="56" selection-start-column="50" selection-end-line="56" selection-end-column="50" />
+          <folding>
+            <element signature="e#981#1026#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/service/blogNew.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2262">
+          <caret line="60" column="30" lean-forward="false" selection-start-line="60" selection-start-column="30" selection-end-line="60" selection-end-column="30" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/blog/newArticleBar.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1170">
+          <caret line="30" column="26" lean-forward="false" selection-start-line="30" selection-start-column="26" selection-end-line="30" selection-end-column="26" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/blog/newBookList.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1287">
+          <caret line="34" column="8" lean-forward="false" selection-start-line="34" selection-start-column="8" selection-end-line="34" selection-end-column="8" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/navbar.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="315">
+          <caret line="179" column="35" lean-forward="false" selection-start-line="179" selection-start-column="35" selection-end-line="179" selection-end-column="35" />
+          <folding>
+            <element signature="e#3138#3367#0" expanded="false" />
+            <element signature="e#3579#3685#0" expanded="false" />
+            <element signature="e#3771#4523#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/service/blogNewArticle.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="546">
+          <caret line="25" column="0" lean-forward="false" selection-start-line="25" selection-start-column="0" selection-end-line="25" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/store/modules/timeline.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="117">
+          <caret line="121" column="0" lean-forward="false" selection-start-line="121" selection-start-column="0" selection-end-line="121" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/store/modules/blogNew.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2442">
-          <caret line="122" column="45" lean-forward="false" selection-start-line="122" selection-start-column="45" selection-end-line="122" selection-end-column="45" />
+        <state relative-caret-position="133">
+          <caret line="56" column="0" lean-forward="false" selection-start-line="56" selection-start-column="0" selection-end-line="56" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/store/modules/blogNewArticle.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="351">
+          <caret line="92" column="48" lean-forward="false" selection-start-line="92" selection-start-column="48" selection-end-line="92" selection-end-column="48" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/service/articles.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="705">
+          <caret line="23" column="0" lean-forward="false" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/store/modules/articles.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="39">
+          <caret line="39" column="58" lean-forward="false" selection-start-line="39" selection-start-column="58" selection-end-line="39" selection-end-column="58" />
           <folding />
         </state>
       </provider>
@@ -1212,38 +1151,39 @@
     <entry file="file://$PROJECT_DIR$/README.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="SPLIT">
-          <first_editor relative-caret-position="556">
-            <caret line="832" column="0" lean-forward="true" selection-start-line="832" selection-start-column="0" selection-end-line="832" selection-end-column="0" />
+          <first_editor relative-caret-position="634">
+            <caret line="893" column="0" lean-forward="true" selection-start-line="893" selection-start-column="0" selection-end-line="893" selection-end-column="0" />
             <folding>
-              <marker date="1498664041371" expanded="true" signature="899:954" ph="..." />
-              <marker date="1498664041371" expanded="true" signature="957:977" ph="//..." />
-              <marker date="1498664041371" expanded="true" signature="985:1060" ph="..." />
-              <marker date="1498664041371" expanded="true" signature="1722:1821" ph="{...}" />
-              <marker date="1498664041371" expanded="true" signature="1737:1817" ph="{...}" />
-              <marker date="1498664041371" expanded="true" signature="1752:1811" ph="{...}" />
-              <marker date="1498664041371" expanded="true" signature="1902:2125" ph="{...}" />
-              <marker date="1498664041371" expanded="true" signature="1931:2123" ph="{...}" />
-              <marker date="1498664041371" expanded="true" signature="1935:2025" ph="/*...*/" />
-              <marker date="1498664041371" expanded="true" signature="2206:2317" ph="{...}" />
-              <marker date="1498664041371" expanded="true" signature="2256:2313" ph="{...}" />
-              <marker date="1498664041371" expanded="true" signature="4596:4632" ph="{...}" />
-              <marker date="1498664041371" expanded="true" signature="6827:6943" ph="//..." />
-              <marker date="1498664041371" expanded="true" signature="7062:7438" ph="{...}" />
-              <marker date="1498664041371" expanded="true" signature="7226:7352" ph="{...}" />
-              <marker date="1498664041371" expanded="true" signature="7358:7405" ph="{...}" />
-              <marker date="1498664041371" expanded="true" signature="7521:7571" ph="{...}" />
-              <marker date="1498664041371" expanded="true" signature="8930:8985" ph="{...}" />
-              <marker date="1498664041371" expanded="true" signature="9038:9360" ph="{...}" />
-              <marker date="1498664041371" expanded="true" signature="9154:9285" ph="{...}" />
-              <marker date="1498664041371" expanded="true" signature="9304:9353" ph="{...}" />
-              <marker date="1498664041371" expanded="true" signature="10064:10268" ph="{...}" />
-              <marker date="1498664041371" expanded="true" signature="10088:10217" ph="{...}" />
-              <marker date="1498664041371" expanded="true" signature="10129:10211" ph="{...}" />
-              <marker date="1498664041371" expanded="true" signature="10157:10205" ph="{...}" />
-              <marker date="1498664041371" expanded="true" signature="10237:10266" ph="{...}" />
-              <marker date="1498664041371" expanded="true" signature="13679:13779" ph="{...}" />
-              <marker date="1498664041371" expanded="true" signature="15274:15326" ph="{...}" />
-              <marker date="1498664041371" expanded="true" signature="15477:15554" ph="{...}" />
+              <marker date="1498729792704" expanded="true" signature="899:954" ph="..." />
+              <marker date="1498729792704" expanded="true" signature="957:977" ph="//..." />
+              <marker date="1498729792704" expanded="true" signature="985:1060" ph="..." />
+              <marker date="1498729792704" expanded="true" signature="1722:1821" ph="{...}" />
+              <marker date="1498729792704" expanded="true" signature="1737:1817" ph="{...}" />
+              <marker date="1498729792704" expanded="true" signature="1752:1811" ph="{...}" />
+              <marker date="1498729792704" expanded="true" signature="1902:2125" ph="{...}" />
+              <marker date="1498729792704" expanded="true" signature="1931:2123" ph="{...}" />
+              <marker date="1498729792704" expanded="true" signature="1935:2025" ph="/*...*/" />
+              <marker date="1498729792704" expanded="true" signature="2206:2317" ph="{...}" />
+              <marker date="1498729792704" expanded="true" signature="2256:2313" ph="{...}" />
+              <marker date="1498729792704" expanded="true" signature="4705:4741" ph="{...}" />
+              <marker date="1498729792704" expanded="true" signature="6936:7052" ph="//..." />
+              <marker date="1498729792704" expanded="true" signature="7171:7547" ph="{...}" />
+              <marker date="1498729792704" expanded="true" signature="7335:7461" ph="{...}" />
+              <marker date="1498729792704" expanded="true" signature="7467:7514" ph="{...}" />
+              <marker date="1498729792704" expanded="true" signature="7630:7680" ph="{...}" />
+              <marker date="1498729792704" expanded="true" signature="9039:9094" ph="{...}" />
+              <marker date="1498729792704" expanded="true" signature="9147:9469" ph="{...}" />
+              <marker date="1498729792704" expanded="true" signature="9263:9394" ph="{...}" />
+              <marker date="1498729792704" expanded="true" signature="9413:9462" ph="{...}" />
+              <marker date="1498729792704" expanded="true" signature="10173:10377" ph="{...}" />
+              <marker date="1498729792704" expanded="true" signature="10197:10326" ph="{...}" />
+              <marker date="1498729792704" expanded="true" signature="10238:10320" ph="{...}" />
+              <marker date="1498729792704" expanded="true" signature="10266:10314" ph="{...}" />
+              <marker date="1498729792704" expanded="true" signature="10346:10375" ph="{...}" />
+              <marker date="1498729792704" expanded="true" signature="13788:13888" ph="{...}" />
+              <marker date="1498729792704" expanded="true" signature="15383:15435" ph="{...}" />
+              <marker date="1498729792704" expanded="true" signature="15586:15663" ph="{...}" />
+              <marker date="1498729792704" expanded="true" signature="16721:16770" ph="{...}" />
             </folding>
           </first_editor>
           <second_editor />

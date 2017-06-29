@@ -162,10 +162,14 @@ http://www.infoq.com/cn/articles/es6-in-depth-arrow-functions
 - [ ] 4.我的图片功能
 - [x] 5.timeline删除和改变状态
 - [x] 6.cookie自动登录
-- [x] 7. blog阅读功能
-- [] 8. 支持markdown
-- [] 9. 写作和编辑
-- [] 10. 文章详情界面
+- [x] 7.blog阅读功能
+- [] 8.支持markdown
+- [] 9.写作和编辑
+- [] 10.文章详情界面
+
+## bugTodo
+
+- [ ] 1.修改数据下载机制-现在是集中在用户登录之后，但是当用户关掉浏览器的时候，还在登陆，但是数据已经不见了。路由检测
 
 ## 更新记录
 
@@ -176,6 +180,7 @@ http://www.infoq.com/cn/articles/es6-in-depth-arrow-functions
 2017-06-17 13:57:10 修改了time里呢，只显示登陆账号的timeline
 2017-06-21 02:32:06 登陆的navbar里，修改了creat方法，不用再重复登陆了
 2017-06-24 06:51:29 完成了博客页面的设计。从leancloud读取临时的数据。
+2017-06-29 09:57:44 完成了新建文章的sidebar
 
 
 ## 流程和思路
@@ -830,6 +835,62 @@ action只接受一个参数，所以应包装起来。
 第二个方法感觉比较好。
 
 肯定以后有需要当前book的地方，所以用这个方式比较好。
+
+#### articleBar
+这里是文章的创造地点。
+
+![mark](http://oc2aktkyz.bkt.clouddn.com/markdown/20170629/113427354.png)
+
+![mark](http://oc2aktkyz.bkt.clouddn.com/markdown/20170629/113446461.png)
+
+你会看到新建文章的时候，最右边的模块会被渲染。
+
+这个部分由note-list 组成。
+3个部分。
+1. new-note
+2. nav-list
+3. new-note-bottom
+
+- new-note
+高度固定了，只有一个图标加文字。
+@click的动作应该是新建一个article，
+然后插入本地的article。
+按照currentbook，筛选article数组才对。
+要考虑到下方新建文章，流程是一样的。
+要不要加一个参数判断？还是说代码足够简单，新建一个方法？
+
+还是新建一个方法算了。简单明了。
+为此新建一个store的module。
+
+新建完毕之后，需要保存到本地列表。
+下面就渲染这个列表就可以了。
+getArticles已经用在了博客浏览的界面。保存着全部的article。
+是从这里按照currentbook，筛选全部的article呢？
+还是说，当选择book的时候，就已经筛选出来。
+新建只是添加就完了呢？
+
+选择book的时候，就更新currentbook，还有新建的时候也是。
+只有两处，应该在这个时候，也自动更新current_new_articles。
+这样的话，新建了article的时候，就只要存进去就可以了。
+同时为了下次编辑文章的时候着想，有必要生成一个变量保存当前的文章。
+这个变量是要在blogNewArticles里了。
+
+数组过滤该怎么做？
+
+```javascript
+    const tochange = state.readTimelineDates[timeline._key].filter(function (el) {
+      return el.id === timeline._value.id
+    })
+```
+遇到了一个bug，不知道为什么，owner查询的aricle出了问题。
+过一会又自动好了。
+
+现在是我在blogNew 模块里，设置了一个current_book_articles用来存储现有的书的文章。
+我新建文章是在blogNewArticle里。
+我需要新建一个文章之后插入到数组里。
+我如何做呢？
+
+只好在action里，使用rootState，并且把数据传送到mutation里操作了。
 
 
 

@@ -34,10 +34,10 @@ const actions = {
     commit(types.SAVE_CURRENT_PAGE, page)
   },
   // 获取我的博客文章
-  actionGetArticles ({ commit }, userid) {
+  actionGetArticles ({ commit, rootState }, userid) {
     const promise = new Promise(function (resolve, reject) {
       // 这里编写异步代码
-      articles.getArticles(userid, (backresult, result) => {
+      articles.getArticles(rootState.login.currentUser.id, (backresult, result) => {
         if (result === 'success') {
           resolve(backresult)
         } else {
@@ -51,9 +51,6 @@ const actions = {
       // Todo：这里需要处理一下获取的数据,这个要不要加工成干净的数据呢？
       // 还是说直接赋值更好呢？先试一下直接复制吧。
       commit(types.GET_ARTICLES, data)
-      // const result = dataChange.dateToTimelines(data)
-      // commit(types.GET_READLINETIME, result['days'])
-      // commit(types.GET_READLINEDATA, result['dates'])
     }, function (error) {
       console.log(error)
       console.log('出了什么错误')
@@ -64,9 +61,6 @@ const actions = {
 
 // mutations
 const mutations = {
-  // [types.SAVE_CURRENT_USER] (state, user) {
-  //   state.currentUser = user
-  // },
   [types.SAVE_CURRENT_ARTICLE] (state, article) {
     console.log(article)
     state.current_article = article

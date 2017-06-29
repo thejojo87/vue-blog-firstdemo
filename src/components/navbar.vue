@@ -177,7 +177,7 @@
             // 在这里要初始化timeline才可以
             // 同样初始化blog文章
             this.actionGetTimelineDates(this.AV.User.current().id)
-            this.actionGetArticles(this.AV.User.current().id)
+            this.actionGetArticles()
             this.actionGetBooks()
           }, function (error) {
             alert(error)

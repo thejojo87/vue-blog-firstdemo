@@ -14,7 +14,8 @@ const types = {
 }
 const state = {
   books: [],
-  currentBook: []
+  currentBook: [],
+  current_book_articles: []
   // currentUser: ''
 }
 // getters login需要处理的是登陆的用户id什么的，leancloud返回的资料
@@ -26,28 +27,38 @@ const getters = {
 // actions
 const actions = {
   // 删除book
-  actionDeleteBook ({ commit }, bookdata) {
+  actionDeleteBook ({ commit, rootState }, bookdata) {
     const promise = new Promise(function (resolve, reject) {
       // 这里编写异步代码
       blogNew.deleteBook(bookdata, (backresult, result) => {
         if (result === 'success') {
-          resolve(bookdata.bookindex)
+          const articles = rootState.articles.articles
+          const data = {
+            _articles: articles,
+            _bookindex: bookdata.bookindex
+          }
+          resolve(data)
         } else {
           reject(backresult)
         }
       })
     })
-    promise.then(function (bookindex) {
+    promise.then(function (data) {
       console.log('删除book成功了')
-      commit(types.DELETE_BOOK, bookindex)
+      commit(types.DELETE_BOOK, data)
     }, function (error) {
       console.log(error)
       console.log('出了什么错误')
     })
   },
   // 保存当前的book
-  actionSaveCurrentBook ({ commit }, book) {
-    commit(types.SAVE_CURRENT_BOOK, book)
+  actionSaveCurrentBook ({ commit, rootState }, book) {
+    const articles = rootState.articles.articles
+    const data = {
+      _articles: articles,
+      _book: book
+    }
+    commit(types.SAVE_CURRENT_BOOK, data)
   },
   // 修改book的名字
   actionChangeBookname  ({ commit }, bookdata) {
@@ -115,27 +126,34 @@ const actions = {
 
 // mutations
 const mutations = {
-  [types.DELETE_BOOK] (state, bookindex) {
+  [types.DELETE_BOOK] (state, data) {
     // 这里要删除本地book，然后把相同indexbook作为currentbook
     // xian从数组里删除指定位置元素，然后赋值
-    console.log(bookindex)
-    state.books.splice(bookindex, 1)
-    state.currentBook = state.books[bookindex]
+    state.books.splice(data._bookindex, 1)
+    state.currentBook = state.books[data._bookindex]
+    const tosave = data._articles.filter(function (el) {
+      return el.attributes.belongbook.id === state.currentBook.id
+    })
+    state.current_book_articles = tosave
   },
-  [types.SAVE_CURRENT_BOOK] (state, book) {
-    console.log(book)
-    state.currentBook = book
+  [types.SAVE_CURRENT_BOOK] (state, data) {
+    state.currentBook = data._book
+    // 保存，同时保存当前book里的articles
+    const tosave = data._articles.filter(function (el) {
+      return el.attributes.belongbook.id === state.currentBook.id
+    })
+    state.current_book_articles = tosave
   },
   [types.CHANGE_BOOKNAME] (state, newbookname) {
     state.currentBook.attributes.title = newbookname.bookname
   },
   [types.GET_BOOKS] (state, books) {
-    console.log('97u98asudfioja isdfj')
     state.books = books
   },
   [types.CREATE_NEW_BOOK] (state, newbook) {
     state.books.unshift(newbook)
-    console.log(state.books)
+    state.currentBook = newbook
+    // 新建的时候，当前的文章数为0，所以没必要插入。
   }
 }
 

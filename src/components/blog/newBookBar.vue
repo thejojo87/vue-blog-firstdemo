@@ -40,6 +40,7 @@
       NewBookList
     },
     created: function () {
+      this.actionGetBooks()
     },
     computed: {
       ...mapGetters({
@@ -48,7 +49,8 @@
     },
     methods: {
       ...mapActions([
-        'actionCreateNewBook'
+        'actionCreateNewBook',
+        'actionGetBooks'
       ]),
       addNewBook () {
         this.isAddBook = !this.isAddBook
