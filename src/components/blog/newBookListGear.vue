@@ -47,9 +47,8 @@
     },
     data () {
       return {
-        _bookname: '',
-        _bookid: '',
         _index: 0,
+        _bookname: '333',
         visible: false,
         isChangeName: false,
         isDeleteBook: false
@@ -57,12 +56,20 @@
     },
     created: function () {
       console.log('新建文章booklist被创造出来了')
-      this._bookname = this.bookname
-      this._bookid = this.bookid
       this._index = this.index
+      this._bookname = this.name
+    },
+    watch: {
+      getCurrentBook: function (val, oldVal) {
+        console.log('new: %s, old: %s', val, oldVal)
+        console.log(val)
+        this._bookname = val.attributes.title
+      }
     },
     computed: {
-      ...mapGetters({})
+      ...mapGetters({
+        getCurrentBook: 'getCurrentBook'
+      })
     },
     methods: {
       ...mapActions([
@@ -72,6 +79,7 @@
       // 也可以用参数，但是依然需要判断，好麻烦，还是直接写算了
       changeNameCancel () {
         console.log('changeNameCancel')
+//        this._bookname = this.bookname
         this.visible = false
         this.isChangeName = false
       },
@@ -79,10 +87,6 @@
         console.log('changeNameEnd')
         this.isChangeName = false
         this.visible = false
-        // Todo： 要进行名称的修改
-        console.log(this.bookid)
-        console.log(this.bookname)
-        console.log(this._bookname)
         const newbookname = {
           bookid: this.bookid,
           bookname: this._bookname
@@ -97,6 +101,7 @@
       deleteBookStart () {
         console.log('deleteBookStart')
         this.isDeleteBook = true
+        this.visible = false
       },
       deleteBookCancel () {
         this.isDeleteBook = false
@@ -104,8 +109,9 @@
       },
       deleteBookEnd () {
         console.log('deleteBookStart')
+        console.log(this._index)
         const deleteBook = {
-          bookid: this._bookid,
+          bookid: this.bookid,
           bookindex: this._index
         }
         this.actionDeleteBook(deleteBook)

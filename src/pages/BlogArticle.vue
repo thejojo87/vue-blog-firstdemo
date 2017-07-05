@@ -3,7 +3,6 @@
     <sidebar></sidebar>
     <div class="main">
       <div class="blog">
-        <!--Todo: 这里要添加博客内容-->
         <div class="title">
           <h1>{{  getCurrentArticle.attributes.title  }}</h1>
         </div>

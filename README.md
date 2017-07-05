@@ -169,7 +169,17 @@ http://www.infoq.com/cn/articles/es6-in-depth-arrow-functions
 
 ## bugTodo
 
-- [ ] 1.修改数据下载机制-现在是集中在用户登录之后，但是当用户关掉浏览器的时候，还在登陆，但是数据已经不见了。路由检测
+- [ ]  book，最后一个元素，删除的时候undefined，哪个设置为active？(要是不设置貌似也没什么问题)
+- [ ] 修改数据下载机制-现在是集中在用户登录之后，但是当用户关掉浏览器的时候，还在登陆，但是数据已经不见了。路由检测
+
+- [x]  修改newBookListGear里，_开头的变量的用法。
+- [x]  改名字肯定也错了。
+- [x]  观察currentbook，然后每当这个改变的时候，同样保存文章
+- [x]  一开始文集数量为0的时候，下方的新建文章没必要出现
+- []  active_article，保存当前文章
+- [x]  changeName 不能在gear里直接修改。(watch，currentbook)
+- [x]  下方添加文章的时候，active依然为0，应该是倒数才对。
+- [x]  删除文集的时候，应该把articles也全部删掉。
 
 ## 更新记录
 
@@ -181,7 +191,7 @@ http://www.infoq.com/cn/articles/es6-in-depth-arrow-functions
 2017-06-21 02:32:06 登陆的navbar里，修改了creat方法，不用再重复登陆了
 2017-06-24 06:51:29 完成了博客页面的设计。从leancloud读取临时的数据。
 2017-06-29 09:57:44 完成了新建文章的sidebar
-
+2017-07-03 09:12:36 完成了新建文章的删除book，删除article等功能
 
 ## 流程和思路
 
@@ -851,7 +861,7 @@ action只接受一个参数，所以应包装起来。
 2. nav-list
 3. new-note-bottom
 
-- new-note
+##### new-note
 高度固定了，只有一个图标加文字。
 @click的动作应该是新建一个article，
 然后插入本地的article。
@@ -892,9 +902,461 @@ getArticles已经用在了博客浏览的界面。保存着全部的article。
 
 只好在action里，使用rootState，并且把数据传送到mutation里操作了。
 
+##### navlist
+在newArticleBar下面再弄一个组件吧。
+
+![mark](http://oc2aktkyz.bkt.clouddn.com/markdown/20170630/055150434.png)
+五个部件组成。
+第一个图标，文件的。
+第二个下面字数
+第三个，标题。
+第四个，内容的简写。
+第五个 齿轮测试按钮。
+
+![mark](http://oc2aktkyz.bkt.clouddn.com/markdown/20170630/055254029.png)
+
+齿轮下面有这么几个选项。
+
+![mark](http://oc2aktkyz.bkt.clouddn.com/markdown/20170630/055341358.png)
+发布后并不是跳转链接，只不过又是一个白色界面罢了。
+
+- 第一个，图标，貌似就是document这个图标
+
+![mark](http://oc2aktkyz.bkt.clouddn.com/markdown/20170630/060120218.png)
+简书里是有发布的选项的，一旦发布，那么图标就会变成另一个，其实就是加上一个check标志，换个颜色罢了。
+但是这个对我来说并没有任何意义。
+图标直接写上一个就可以了。
+
+或许以后可以考虑个加密功能吧。
+
+- 第二个， 字数。
+
+这里遇到了问题，因为这个长度会和文章内容部分有冲突，结果会导致
+竖排。
+
+我在想要不要把这个脱离文档流呢？
+但是如果这么做的话，字数后面的div元素也跟着乱起来了。
+所以我在想，或许应该把字数放在最后面？
+
+
+- 第三个，标题，第四个，内容
+简写，因为如果不确定宽度的话，就无法省略号了。
+因此我指定了宽度90%，高度60px，叠加在一起。
+但是这样的话，就导致了，text居中了。
+因为这两个都是被撑满了的。
+因此需要在父元素的div里，text-align-left才可以。
+
+可能需要重新修改下宽度。感觉并不正确。
+或许用flex 1 更好？
+
+不知道为什么百分比来指定宽度，会导致把gear元素顶出包裹的div。
+所以采取了。
+左边固定，gear固定。
+中间的，采用 calc，计算，然后flex 1 的方法。
+
+- 第五个 齿轮
+
+这个也要不要做成另一个组件呢？
+做成组件吧。代码比想象中多太多了。
+
+齿轮里的设置，要做的只有两个。
+一个是删除文章。
+一个事移动文章。
+
+#### 删除文集之后需要把文章也要删除 （Todo：）
+
+为什么删除最后一个文集，完全没反应？
+
+刷新blog之后，虽然第一个元素被设置为activebook，
+但是articles并没有被选中。
+currentbook和current_book_articles都是0
+新建并不会改变article（或许这个是正常现象）
+剩下两个book的时候，删除了一个book，另一个book的current_book并不会改变。
+
+不知道为什么，当一个书，在选中为currentBook,
+danshi current_book_articles没有反应。
+
+名字为空的时候，很难点击book
+
+- 1.bug-登陆后应该把第一个book作为激活的book
+按道理应该是登陆后，或者页面created的时候，这么做。
+登陆之后，book就已经放进store里了。
+
+两个选择：
+1. newarticle界面创造的时候这么做。
+2. 观察currentbook，当这个变化的时候，重新输入。
+
+这个方法，貌似比我之前当新建和删除的时候的办法要好得多。
+要放在newArticleBar呢？还是放在blogNew？
+
+我之前采取的current——book-articles方法是错误的。
+当我新建，删除的时候，采用数组操作的方式。
+但是仔细一想，只有currentbook变化的时候，currentarticle才变化。
+而currentbook只有在blogNew-newboooklist里才会出现。
+我为什么不监控这个呢？
+然后存入不久完了么
+
+1. newBookList.vue里，currentbook。
+// Todo: 这里要当变化的时候，current——article也要存进去
+
+2. currentbook是什么时候出现的？
+一个是登陆的时候，获取数据之后，把数据的第一条存进去。
+还有一个是，当新建文集的时候，把建立好的文集放在最上面并且current
+这里不需要任何新建文章
+还有一个是删除之后，当前index作为currentbook
+最后一个是点击之后，index
+
+最后一个没有任何问题。
+新建之后，文集也没有问题，有问题的是，active类，并没有转过去。
+在这里应该要初始化index的
+
+登陆之后应该需要保存currentbook
+是在actionGetBooks之后进行的。
+只要把第一个元素放进去就可以了。
+最后一个是删除
+删除应该表现为，index不变，然后list里消失。
+
+删除有一个bug。
+删book的时候会删除其他list。
+到底 为什么？
+
+问题的所在在于，当我新建文集的时候，不知道为什么，leancloud能生成，但是
+本地返回不知道在哪里出错了。
+
+如果删除最后一个元素的话，index就会变成undefined。
+
+77 e6
+11 20
+22 aa
+33 fa
+
+0 是3
+1 是2
+如果新建一个book 4，那么
+0 变成了4
+1是3
+2是2
+
+如果先删除最后一个
+
+newBookListGear这里有严重的bug存在。
+
+_bookid，这些保存的是上一个数据，当新建的时候，按照index，数据并没有
+被销毁，所以导致出错。
+
+##### 3. bottom
+
+做这个的时候遇到了个问题。
+因为list里面有浮动元素，结果导致父元素高度为0
+
+不知道为什么，把li的display flex删除就有高度了。
+
+#### 新建文章栏 Todo：
+发现了一个bug，新建之后，books数组里没有被更新
+刷新后，book自动为第一个，但是filter数据需要时间，这个，并没有自动存进去articles
+应该在book变化之后，自动启动更新，存入当前articles
+article的变化只有两处。
+一个事当currentbook变化的时候。
+另一个是当getbook数据的时候。
+b
+首先是获取ook数据成功了-然后存入currentbook，然后触发条件。
+更新currentarticles
+这个逻辑没有问题，有问题的是，articles，获取会慢很多。
+
+要不要监控articles？
+当articles变化的时候，就这么做了。
+
+- [x] 使用下面，新建文章，但是active始终是第一个。
+- [x] 存入currentarticle，这个什么时候操作呢？是不是当index变化的时候？
+初始化的时候，要不要监控currentBookArticles？
+这个数组什么时候会变化？
+还是说监控current——book？
+还是说listcreated的时候插进去？
+
+删除并没有把本地的articles给删除掉。
+是否应该刷新一下？
+还是说操作本地数据？
+
+2017-07-02 13:02:09
+Todo:
+- [ ] 删除的时候，同时消除本地数据-要么更新-要么删除全部
+- [x] currentArticleindex,在切换book的时候不变。
+- [x] 新建的时候current_bookarticles新建-而其他不动
+- [ ] 删除有两种一个是删除book-一个是删除article
+
+思路：
+要么设置一个变量，watch这个变量，当取反的时候，重新获取books和articles数据。
+
+要么删除books的同时，去删除本地数组
+
+新建的时候，不是应该增加articles这个是总数组么？
+然后这个反应到current——book——articles
+
+按道理应该是删除总的articles数组。
+
+奇了怪了，为什么createarticle的时候传入rootstate里的article，
+操作这个能增加，但是删除不可以呢？
+问题有可能出在直接赋值是错误的。
+但是unshift或者popup是可以的
+
+就是对元素整体操作，赋值是无效的。
+但是采用属性操作是可以的。
+这样操作就可以了。
+
+```javascript
+    for (let i = data._articles.length - 1; i >= 0; i--) {
+      if (data._articles[i].id === data._articleid) {
+        data._articles.splice(i, 1)
+      }
+    }
+```
+只要删除总的articles
+那么以改变，就能在newBookList里watch的getArticles方法。
+带动actionSaveCurrentBookArticles，更改books里的article
+同时更改newArticleList里面watch的getCurrentBookArticles
+
+
+2017-07-03 01:30:14 
+Todo: 
+
+- [x] 删除article
+- [x] 删除book
+- [x] 移动功能article
+
+- 思路
+删除book的时候，只要删除总数组里关联的article，就可以了。
+但是问题在于，删除book之后，需要删除leancloud上的article
+article使用belongbook的pointer
+首先按照pointer查询数据，查询之后回来的结果是个数组。
+leancloud有批量操作功能。
+用这个直接把数组全部删除就可以了。
+
+```javascript
+export function deleteBook (bookdata, callback) {
+  const deletebook = av.Object.createWithoutData('books', bookdata.bookid)
+  // 这里需要删除book相关的articles
+  console.log('asdfkljaskldfj')
+  const query = new av.Query('Articles')
+  query.equalTo('belongbook', deletebook)
+  query.find().then(function (articles) {
+    // 删除成功
+    av.Object.destroyAll(articles).then(function () {
+      // 成功
+    }, function (error) {
+      // 异常处理
+      console.log(error)
+    })
+    // articles.destroy()
+    console.log('belongbook的articles删除成功了')
+  }, function (error) {
+    // 删除失败
+    console.log(error)
+  })
+  deletebook.destroy().then(function (results) {
+    // 删除成功
+    callback(results, 'success')
+  }, function (error) {
+    // 删除失败
+    callback(error, 'error')
+  })
+}
+```
+
+- 移动文章
+
+界面没有什么难点。
+但是简书的界面设计我觉得很不好。
+书的名称目录列出来，然后选择之后就变黑。
+
+这个效果很难看清楚。
+我做个单选框算了。
+使用v-for来渲染。
+
+本来依然想使用iview里的radio单选框来解决问题。
+发现组合使用的单选框有很大问题。
+因为iview使用的基本单元是Radio,这个把默认的input的value覆盖掉了
+本来应该是使用v-bind value来.
+iview的value接口只有一个label，
+但是label并不能把v-for里的index什么的识别为变量。
+
+然后就使用了bootstrap的组件。
+
+看到了stackoverflow的答案，受到启发
+
+```vue
+    <select v-model="testVal">
+        <option v-for="item in test" :value="item">{{item}}</option>
+    </select>
+
+    data(){
+        return{
+          test: ['one', 'two', 'three'],
+          testVal: null
+        }
+    },
+```
+
+```html
+        <div  v-for="(book, index) in getBooks" >
+          <label class="radio-inline">
+            <input type="radio" v-model="transbookname" name="transbooknameSelect" :value="book.attributes.title">
+            {{book.attributes.title}}
+          </label>
+        </div>
+```
+后来我突然想到，用v-bind，把label接口绑定不就完了么？
+发现果然可以
+
+代码减少到一行。
+
+```html
+        <Radio-group  vertical v-model="transbookname">
+          <Radio v-for="(book, index) in getBooks" :label=book.attributes.title>{{book.attributes.title}}</Radio>
+        </Radio-group>
+```
+
+再次改进了动作，不能让移动到现有的书上
+
+```html
+        <Radio-group  vertical v-model="transbookname">
+          <div  v-for="(book, index) in getBooks" >
+            <Radio v-show="book.id !== getCurrentBook.id" :label=book.attributes.title>
+              {{book.attributes.title}}
+            </Radio>
+          </div>
+        </Radio-group>
+```
+
+下一个就是动作了。
+移动文章到另外一个book。实质应该是修改belongbook才对。
+leancloud先修改。
+然后修改本地article数组数据，
+修改article数组会不会引发更改当前book更改呢？
+应该达到的效果是不会更改当前文章，但是保持当前书。
+只是文章消失不见了。也就是说，index并未更改。
+
+首先按照objid查询。
+然后按照book的objid生成pointer对象。
+然后set。save就可以了。
+下面来看本地数据修改。
+简书中，移动的话，当前book不变。
+当前articleindex不变。
+当前article变化为index的article
+
+我先修改下articles数组里的数据
+pointer下面只有3个属性，当中一个是objid
+是不是只要修改这个就可以了？
+发现并不是，反而是删除更为符合表现。
+删除后再插入貌似是更好的选择。
+
+修改一个属性后返回来的并不是全部数据。
+只包含着更新的数据。
+因此不能用于重新保存，而是save之后使用then重新拿着id，查询一次再返回。
+![mark](http://oc2aktkyz.bkt.clouddn.com/markdown/20170704/013557431.png)
+
+
+![mark](http://oc2aktkyz.bkt.clouddn.com/markdown/20170704/013634318.png)
+
+![mark](http://oc2aktkyz.bkt.clouddn.com/markdown/20170704/013622919.png)
 
 
 #### 编辑文章
 
+编辑这个部分，由不同的网址到不同的地址上的。
+
+![mark](http://oc2aktkyz.bkt.clouddn.com/markdown/20170704/143409989.png)
+
+这个还可以转到预览模式
+
+![mark](http://oc2aktkyz.bkt.clouddn.com/markdown/20170704/143437653.png)
+
+预览模式还可以切换到写作模式
+
+![mark](http://oc2aktkyz.bkt.clouddn.com/markdown/20170704/143559657.png)
+
+2017-07-04 00:29:37
+
+Todo: 
+
+- [x] 编辑器的标题栏
+
+- 思路：
+编辑器-由div，包裹着一个form
+我的BlogNew这里要引入一个new-edit-bar
+
+我有点犹豫，要不要也做个form呢？
+还是说，自己定制div？
+
+决定自己定制div了。
+
+border： none
+outline： none
+
+这样的话，input的框就没有了。
+
+2017-07-05 06:28:15
+
+- Todo
+- [x] 保存title
+- [ ] 功能栏-图片
+- [ ] 编辑栏
+
+功能栏有好几个功能。
+第一个图片，转换成云存储，
+第二个撤销和重做。
+第三个历史版本。
+
+第四个保存。
+第五个预览模式
+第六个协作模式
+第七个发布文章
+
+这里有点困难，我想看看别人是怎么做的。
+
+https://github.com/hinesboy/mavonEditor
 
 
+
+- 思路
+
+title需要添加动作。
+如果更改的话，需要保存到leancloud，同时保存到本地数据。
+leancloud修改很简单。
+本地的话，我应该修改哪个呢？
+currentarticle的？
+还是article数组的？article数组修改就可以了。
+
+
+功能栏是一个toolbar，灰色的长条。
+这里我看到是用ul下，li来排列的。
+其实未必用这个吧。
+
+![mark](http://oc2aktkyz.bkt.clouddn.com/markdown/20170705/063200264.png)
+
+功能有，图片，这个只是个样子而已。
+![mark](http://oc2aktkyz.bkt.clouddn.com/markdown/20170705/063228324.png)
+
+撤销，重做。
+历史版本。
+
+保存。
+切换到预览模式，切换到协作模式，发布文章。
+
+这里使用iview的Tooltip很简单。
+但是原来限制了宽度max为250.
+所以把这个改成500了。
+
+下一步就是制作toolbar的图片功能如何实现？
+只要把图片粘贴过去，就自动上传，并且转换成markdown链接。
+如何做到这一点？
+
+还有下一步就是undo，redo。
+这个要保存article的所有状态。
+如何做到这一点？
+
+https://stackoverflow.com/questions/42878329/going-back-to-states-like-undo-redo-on-vue-js-vuex/44865208#44865208
+
+https://vuex.vuejs.org/zh-cn/api.html
+
+先从简单的开始吧。
+先把编辑栏做好。

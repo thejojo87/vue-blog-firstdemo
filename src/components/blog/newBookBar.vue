@@ -54,7 +54,9 @@
       ]),
       addNewBook () {
         this.isAddBook = !this.isAddBook
-        this.actionCreateNewBook(this.newBookName)
+        if (this.newBookName) {
+          this.actionCreateNewBook(this.newBookName)
+        }
       }
     }
   }

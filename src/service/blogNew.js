@@ -15,6 +15,24 @@ export function avinit () {
 
 export function deleteBook (bookdata, callback) {
   const deletebook = av.Object.createWithoutData('books', bookdata.bookid)
+  // 这里需要删除book相关的articles
+  console.log('asdfkljaskldfj')
+  const query = new av.Query('Articles')
+  query.equalTo('belongbook', deletebook)
+  query.find().then(function (articles) {
+    // 删除成功
+    av.Object.destroyAll(articles).then(function () {
+      // 成功
+    }, function (error) {
+      // 异常处理
+      console.log(error)
+    })
+    // articles.destroy()
+    console.log('belongbook的articles删除成功了')
+  }, function (error) {
+    // 删除失败
+    console.log(error)
+  })
   deletebook.destroy().then(function (results) {
     // 删除成功
     callback(results, 'success')

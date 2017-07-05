@@ -13,6 +13,8 @@ import timeline from './modules/timeline'
 import articles from './modules/articles'
 import blogNew from './modules/blogNew'
 import blogNewArticle from './modules/blogNewArticle'
+import blogNewEdit from './modules/blogNewEdit'
+// import blogNewEdit from './modules/blogNewEdit'
 
 Vue.use(Vuex)
 
@@ -21,12 +23,13 @@ export default new Vuex.Store({
   getters,
   // 將整理好的 modules 放到 vuex 中組合
   modules: {
-    // count,
     login,
     timeline,
     articles,
     blogNew,
-    blogNewArticle
+    blogNewArticle,
+    blogNewEdit
+    // blogNewEdit
   },
   // 嚴格模式，禁止直接修改 state
   strict: true

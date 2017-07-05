@@ -1,13 +1,13 @@
 <template>
 <div class="new_book_list" >
   <ul class="list_display" >
-    <li class="book" :class="{book_active: index === activeIndex}" v-for="(book, index) in getBooks">
+    <li class="book" :class="{book_active: index === getCurrentBookIndex}" v-for="(book, index) in getBooks">
       <a @click="chooseBook(index, book)" data-type="active" class="notebook-name">
         <span>
           <div>{{  book.attributes.title  }}
           </div>
         </span>
-        <div v-show="index === activeIndex">
+        <div v-show="index === getCurrentBookIndex">
           <new-book-list-gear :index="index" :bookid="book.id" :bookname="book.attributes.title"></new-book-list-gear>
         </div>
       </a>
@@ -24,24 +24,56 @@
     name: 'NewBookList',
     data () {
       return {
-        activeIndex: 0
+//        activeIndex: this.getCurrentBookIndex
       }
     },
     created: function () {
       console.log('新建文章booklist被创造出来了')
+      console.log(this.activeIndex)
+      this.activeIndex = this.getCurrentBookIndex
+    },
+    watch: {
+      // Todo: 这里要当变化的时候，current——article也要存进去
+      getCurrentBook: function (val, oldVal) {
+        console.log('getcurrentbook')
+        console.log('new: %s, old: %s', val, oldVal)
+        console.log(val)
+        this.actionSaveCurrentBookArticles()
+        // Todo：如果是空文章，会不会有后果？暂时还没有看到后果因为压根都没有数据，所以不用渲染。
+        this.actionSaveCurrentBookArticleIndex(0)
+        // 既然book变了，article变了，那么就应该改变当前的article才对。
+      },
+      getCurrentBookIndex: function (val, oldVal) {
+        console.log('getcurrentbookindex')
+        console.log('new: %s, old: %s', val, oldVal)
+        console.log(val)
+      },
+      getArticles: function (val, oldVal) {
+        console.log('getcurrentbookarticles')
+        console.log('new: %s, old: %s', val, oldVal)
+        console.log(val)
+        this.actionSaveCurrentBookArticles()
+      }
     },
     computed: {
       ...mapGetters({
-        getBooks: 'getBooks'
+        getBooks: 'getBooks',
+        getArticles: 'getArticles',
+        getCurrentBook: 'getCurrentBook',
+        getCurrentBookIndex: 'getCurrentBookIndex'
       })
     },
     methods: {
       ...mapActions([
-        'actionSaveCurrentBook'
+        'actionSaveCurrentBook',
+        'actionSaveCurrentBookIndex',
+        'actionSaveCurrentBookArticles',
+        'actionSaveCurrentBookArticleIndex'
       ]),
       chooseBook (index, book) {
-        this.activeIndex = index
+//        this.activeIndex = index
         this.actionSaveCurrentBook(book)
+        this.actionSaveCurrentBookIndex(index)
       }
     }
   }

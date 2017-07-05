@@ -48,8 +48,6 @@ const actions = {
     promise.then(function (data) {
       console.log('获取articles数据成功了')
       console.log(data)
-      // Todo：这里需要处理一下获取的数据,这个要不要加工成干净的数据呢？
-      // 还是说直接赋值更好呢？先试一下直接复制吧。
       commit(types.GET_ARTICLES, data)
     }, function (error) {
       console.log(error)

@@ -2,7 +2,6 @@
   <div class="blog_content">
     <div class="main">
       <div class="blog" v-if="articles" v-for="article in this.displayArticles">
-        <!--Todo: 这里要添加博客内容-->
         <div class="title">
           <p><a @click="goDetail(article)">{{article.attributes.title}}</a></p>
           <span>发布时间：{{$formatDate(article.createdAt, 'yyyy-MM-dd hh:mm')}}</span>

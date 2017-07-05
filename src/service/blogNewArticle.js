@@ -13,6 +13,33 @@ export function avinit () {
   return AV
 }
 
+export function transArticle (articledata, callback) {
+  const transarticle = av.Object.createWithoutData('Articles', articledata.articleid)
+  const _transbook = av.Object.createWithoutData('books', articledata.bookid)
+  transarticle.set('belongbook', _transbook)
+  transarticle.save().then(function () {
+    const query = new av.Query('Articles')
+    query.get(articledata.articleid).then((results) => {
+      callback(results, 'success')
+    }, function (error) {
+      console.log(error)
+      callback(error, 'error')
+    })
+  })
+  // 如果直接使用饭回来的result，它只有更新的属性。
+}
+
+export function deleteArticle (articledata, callback) {
+  const deletearticle = av.Object.createWithoutData('Articles', articledata.articleid)
+  deletearticle.destroy().then(function (results) {
+    // 删除成功
+    callback(results, 'success')
+  }, function (error) {
+    // 删除失败
+    callback(error, 'error')
+  })
+}
+
 export function createNewArticle (userid, bookid, callback) {
   const NewArticle = av.Object.extend('Articles')
   const _newarticle = new NewArticle()
