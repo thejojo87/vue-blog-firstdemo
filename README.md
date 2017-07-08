@@ -1298,7 +1298,7 @@ outline： none
 
 - Todo
 - [x] 保存title
-- [ ] 功能栏-图片
+- [x] 功能栏-图片
 - [ ] 编辑栏
 
 功能栏有好几个功能。
@@ -1315,7 +1315,9 @@ outline： none
 
 https://github.com/hinesboy/mavonEditor
 
+图片的例子
 
+https://github.com/xiaokaike/magic-upload-image
 
 - 思路
 
@@ -1360,3 +1362,107 @@ https://vuex.vuejs.org/zh-cn/api.html
 
 先从简单的开始吧。
 先把编辑栏做好。
+
+图片粘贴实质上就是在textarea，如何粘贴图片。
+检测后上传到云，转换成外链。
+问题要清楚，越具体越好。
+
+貌似编辑器的原理是，v-model，textarea，然后做各种事情。
+
+2017-07-06 03:56:21
+
+- Todo
+
+- [x] textarea
+- [ ] 图片处理
+- [ ] 编辑栏
+
+今天先做textarea栏先写一下
+
+textarea paste别人的代码是使用了mixin的方式插入。
+
+分为两个部分：
+一个是拖拽，一个是粘贴。
+
+拖拽使用DragEvent。
+
+https://segmentfault.com/a/1190000008503338
+
+
+先写一下粘贴吧。
+粘贴我也使用mixin？
+还是只是写一个js文件弄成函数？
+我不想让这个成为全局函数，因为只需要在editor里使用。
+
+还是说以后在写作模式或者其他模式的时候也要用到？
+
+首先新建一个js模块吧。
+service文件夹是放主要的leancloud的地方。
+放在ext里。
+
+发现了一个问题。
+复制的图片，从粘贴板上获取。
+是只限于从网页复制或者截图的。
+如果是硬盘的图片复制，你在textarea里粘贴是完全没反应的。
+
+http://www.cnblogs.com/djuny/p/5254626.html
+
+
+遇到一个问题：
+使用getAsFile 获取了文件。
+但是想要改名字的时候说
+Cannot assign to read only property 'name' of object '#<File>' 
+没找到合理办法。
+我在想要不上传的时候，重命名就好了吧。
+
+上传的时候，有个问题，数据结构我该怎么做？
+是设置创建者？
+还是说谁都可以读取写？
+
+为了以后当拖拽的时候也可以用，我写了upload模块。
+
+但是上传并且返回url是有延迟的，
+所以写了promise。好繁琐。
+
+有没有更好的办法？
+貌似是使用了ajax。
+我需要学会ajax么？
+
+mixin的方式，在js里，设置了插件。
+然后当事情遇到的时候，往父组件里发送通知。
+
+
+2017-07-07 18:59:26 
+
+- Todo
+
+- [ ] 图片拖拽和上传
+- [ ] 图片处理
+- [ ] 编辑栏
+
+- 思路
+图片拖拽有着api
+别人的代码里，并没有在textarea设置监控。
+而是在父亲div里，设置的。
+
+```javascript
+        @drop="handleDrag"  
+        @dragover="handleDragover"
+        @dragleave="handleDragleave"
+```
+
+一共3个方法，第一个我发现拖动并且释放就可以了。
+第二个和第三个有什么必要呢？
+第二个是当拖拽的元素在目标上面的时候。
+第三个是拖拽的元素在目标上面离开的时候。
+感觉第二个和第三个并没有什么必要啊。
+
+元素列表里是元素。
+我在想，要不要试一下插件的方式？
+还学习一下ajax？
+
+还是嵌套了promise。
+剩下的问题是，如何在上传的时候，出现一个上传中这个图标。
+
+
+

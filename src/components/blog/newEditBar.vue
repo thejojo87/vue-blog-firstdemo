@@ -16,6 +16,24 @@
       </Tooltip>
     </div>
 
+    <div id="newEditMainbar">
+      <textarea placeholder="Write a comment or drag your files here..."
+                v-model="text"
+                v-on:paste="imgPaste($event)"
+                v-on:drop="imgDrag"
+                @dragover="handleDragover"
+                @dragleave="handleDragleave"
+      >
+      </textarea>
+    </div>
+    <div>
+      <!--<Col class="demo-spin-col" span="8">-->
+      <Spin fix v-if="isLoading">
+        <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
+        <div>图片上传中...</div>
+      </Spin>
+      <!--</Col>-->
+    </div>
 
   </div>
     <div id="newEditBackground" v-else="">
@@ -26,8 +44,23 @@
 
 <script>
   import { mapGetters, mapActions } from 'vuex'
+  import * as imgPaste from '@/ext/img_paste'
+  import * as imgDrag from '@/ext/img_drag'
+
   export default {
     name: 'NewEditBar',
+    data () {
+      return {
+        text: '',
+        images: [],
+        isLoading: false
+//        isFocus: false,
+//        isDrogover: false,
+//        upStatus: 'default',
+//        errorText: '',
+//        percentText: 0
+      }
+    },
     computed: {
       ...mapGetters({
         getCurrentNewArticle: 'getCurrentNewArticle'
@@ -37,6 +70,71 @@
       ...mapActions([
         'actionSaveCurrentEditTitle'
       ]),
+      imgDrag: function (event) {
+        // 获取文件列表
+        this.isLoading = true
+        event.preventDefault()
+        const fileList = event.dataTransfer.files
+        const promise = new Promise(function (resolve, reject) {
+          // 这里编写异步代码
+          imgDrag.handleImageDrag(fileList, (backresult, result) => {
+            if (result === 'success') {
+              resolve(backresult)
+            } else {
+              reject(backresult)
+            }
+          })
+        })
+        promise.then((data) => {
+          console.log('成功了上传批量图片')
+          console.log(data)
+          console.log(data.length)
+          for (var i = 0; i < data.length; i++) {
+            console.log(data[i].attributes.images.attributes.url)
+            console.log(data[i].attributes.images.attributes.name)
+            const addurl = '![' + data[i].attributes.images.attributes.name + '](' + data[i].attributes.images.attributes.url + ')' + '\n'
+            this.text += addurl
+          }
+          this.isLoading = false
+        }, function (error) {
+          console.log(error)
+          console.log('出了什么错误')
+        })
+      },
+      // 这个是当元素在目标上面的时候
+      handleDragover (e) {
+        e.preventDefault()
+      },
+      // 这个是元素在目标上面鼠标离开的时候
+      handleDragleave (e) {
+        e.preventDefault()
+      },
+      // 处理图片从粘贴板上粘贴
+      imgPaste: function (event) {
+        this.isLoading = true
+        console.log(event.clipboardData)
+        console.log(event.clipboardData.items)
+        const promise = new Promise(function (resolve, reject) {
+          // 这里编写异步代码
+          imgPaste.handleImagePaste(event, (backresult, result) => {
+            if (result === 'success') {
+              resolve(backresult)
+            } else {
+              reject(backresult)
+            }
+          })
+        })
+        promise.then((data) => {
+          console.log('成功了editor')
+          console.log(data.url)
+          const addurl = '![' + data.name + '](' + data.url + ')'
+          this.text += addurl
+          this.isLoading = false
+        }, function (error) {
+          console.log(error)
+          console.log('出了什么错误')
+        })
+      },
       editAndSaveTitle: function (editedValue) {
         // 一份是保存leancloud，一份是保存本地
         console.log(editedValue)
@@ -46,8 +144,6 @@
           articletitle: editedValue
         }
         this.actionSaveCurrentEditTitle(titleData)
-//        this.editTitle(editedValue)
-//        this.saveToLeancloudTitle(editedValue)
       }
     }
   }
@@ -78,6 +174,7 @@
     width: 100%;
     /*background-color: #66afe9;*/
     height: 100%;
+    /*display: flex;*/
   }
   #newEditBarTitle input {
     /*height: 50px;*/
@@ -116,8 +213,16 @@
     display: inline-block;
     line-height: 17px;
   }
-
-
+  #newEditMainbar {
+    /*background-color: #66afe9;*/
+    display: flex;
+    flex: 1;
+    height: calc(100% - 89px);
+  }
+  #newEditMainbar textarea {
+    width: 100%;
+    height: 100%;
+  }
   .ivu-tooltip-inner {
      max-width: 500px !important;
   }
@@ -126,5 +231,13 @@
     background-color: #555555;
     color: white;
     text-decoration: inherit;
+  }
+  .demo-spin-icon-load{
+    animation: ani-demo-spin 1s linear infinite;
+  }
+  @keyframes ani-demo-spin {
+    from { transform: rotate(0deg);}
+    50%  { transform: rotate(180deg);}
+    to   { transform: rotate(360deg);}
   }
 </style>
