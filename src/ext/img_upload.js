@@ -28,7 +28,6 @@ export function fileUpload (files, callback) {
   img.set('images', avFile)
   img.save().then(function (data) {
     console.log('成功了upload')
-    // console.log(data)
     console.log(data.attributes.images.attributes.name)
     result = data.attributes.images.attributes
     callback(result, 'success')

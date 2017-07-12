@@ -1436,8 +1436,8 @@ mixin的方式，在js里，设置了插件。
 
 - Todo
 
-- [ ] 图片拖拽和上传
-- [ ] 图片处理
+- [x] 图片拖拽和上传
+- [ ] undo,redo
 - [ ] 编辑栏
 
 - 思路
@@ -1463,6 +1463,137 @@ mixin的方式，在js里，设置了插件。
 
 还是嵌套了promise。
 剩下的问题是，如何在上传的时候，出现一个上传中这个图标。
+虽然不是很好看，还有一个图标并不能完全覆盖的bug，但是总算是完成了图片功能。
+因为其他写文章什么的，是一边修改云端，一边本地修改。很快就能完成。
+但是图片上传，并且返回地址需要一些时间，大概5秒左右。
+
+
+2017-07-08 17:40:55
+
+- Todo:
+
+- [ ] undo和redo
+
+- 思路
+
+如果只用快捷键可不可以？
+textarea已经默认为ctrl z是撤销了。
+我需要做的只是，图标按下，就启动ctrl z
+就可以了。
+或者说真的要储存state状态么？
+
+https://github.com/iischajn/iischajn.github.com/issues/1
+
+大致思路应该是，设置一个堆栈。
+然后如果value变化的话，那么就存进去现在的状态。
+
+
+2017-07-09 13:37:24
+
+- Todo:
+
+- [x] 修改了标题上传方式-debounce
+
+- 思路
+
+我一直在困惑，假如每当输入一次input就修改储存的话，
+这个消耗也太大了点吧。
+在vue的官方文档里，看到markdown editor。
+这里使用了debounce
+
+就是在一定时间内只触发一次。
+https://jsfiddle.net/chrisvfritz/rdjjpc7a/?utm_source=website&utm_medium=embed&utm_campaign=rdjjpc7a
+
+https://www.youtube.com/watch?v=xz_TxQBI7Mk
+从这个视频看到，这个视频的思路是，使用filter，
+引用一个已经写好的marked.js文件。
+
+这样的话，事实上，就没必要写很复杂的了。
+
+2017-07-10 16:47:57
+
+- Todo:
+
+- [ ] undo和redo
+
+- 思路
+
+有个叫menote貌似做的不错。
+
+
+code mirror（或者ace editor）作为编辑器，marked负责解析md，highlight负责高亮代码之类
+
+学习一下
+
+首先工具栏它是生成的，而不是写进去的。
+图标是a链接，所以设置title，就会出现说明。
+keybinding文件写入。
+不过我没看明白，tooltip是干什么用的。
+
+
+2017-07-11 22:18:56 
+
+决定使用ace editor了。
+虽然单纯的 textarea 或许也可以。
+但是我要追求的是输入像代码一般的效果。
+
+https://github.com/ajaxorg/ace-builds/
+这里下载安装包然后在index.html里引入
+
+2017-07-12 05:41:10
+
+在使用ace editor的时候，纠结了半天。
+第一步需要在index.html里引用script。
+然后需要使用-创建ace的实例。
+这个其实是
+var editor = window.ace.edit('newEditMainbar')
+这样才可以的。
+因为并不是npm 安装包，所以不能用import
+
+ace 在mounted的时候创造。
+因为ace是在一个div插入一个textarea
+所已不能像之前一样使用v-model。
+但是ace editor 自然就可以使用vim mode。
+还有编辑器行数什么的，非常好用。
+
+问题在于div里绑定方法是不能成功的。
+
+div 并没有相应的api
+
+我该怎么办呢？
+如何才能给ace editor 绑定函数和方法呢
+
+dom 元素的事件列表在这里
+
+https://developer.mozilla.org/zh-CN/docs/Web/Events
+
+按道理说v-on 是可以绑定的。
+发现paste是可以的。
+但是在drop 这个在div 里发现始终是有毛病的。
+在textarea里drop是没问题的。
+但是因为使用的ace editor，所以我只能把拖拽功能放到上面的div
+
+有一个方式是，生成editor之后。
+我运行一个addeventlistener
+给div。试一下拖拽。
+但是这个就涉及到纯粹的js了。
+这样合适吗？
+没办法，这样做代码只需要几行就可以了。
+如果用html-v绑定不成功，那么就用js，getelementbyid
+然后添加drop行动。
+
+下一步就是，粘贴之后，会selection，要把这个改掉
+然后修改字体大小。
+
+paste如果是文字，那么也会上传到图片。
+
+还有，拖拽的如果不是一个图片，那么应该显示警告。
+
+还有要设置自动换行。
+
+
+
+
 
 
 

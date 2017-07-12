@@ -1,5 +1,5 @@
 <template>
-  <div id="newEditBar">
+  <div id="newEditBar" ref="editor">
   <div  id="newEditor" v-if="getCurrentNewArticle">
     <div id="newEditBarTitle">
       <input
@@ -14,17 +14,31 @@
         <Icon type="image" size="20"/>
       </div>
       </Tooltip>
+      <Tooltip content="撤销" placement="top">
+
+        <div class="toolbarImage">
+          <Icon type="ios-undo" size="20"/>
+        </div>
+      </Tooltip>
+      <Tooltip content="重做" placement="top">
+
+        <div class="toolbarImage">
+          <Icon type="ios-redo" size="20"/>
+        </div>
+      </Tooltip>
     </div>
 
-    <div id="newEditMainbar">
-      <textarea placeholder="Write a comment or drag your files here..."
-                v-model="text"
-                v-on:paste="imgPaste($event)"
-                v-on:drop="imgDrag"
-                @dragover="handleDragover"
-                @dragleave="handleDragleave"
-      >
-      </textarea>
+    <div id="newEditMainbar"
+          v-on:paste="imgPaste($event)">
+
+
+      <!--<textarea placeholder="Write a comment or drag your files here..."-->
+                <!--v-model="text"-->
+                <!--v-on:paste="imgPaste($event)"-->
+                <!--v-on:dragover="handleDragover($event)"-->
+                <!--@dragleave="handleDragleave">-->
+                <!--&lt;!&ndash;v-on:drop="imgDrag"&ndash;&gt;-->
+      <!--</textarea>-->
     </div>
     <div>
       <!--<Col class="demo-spin-col" span="8">-->
@@ -46,6 +60,7 @@
   import { mapGetters, mapActions } from 'vuex'
   import * as imgPaste from '@/ext/img_paste'
   import * as imgDrag from '@/ext/img_drag'
+  import { debounce } from 'underscore'
 
   export default {
     name: 'NewEditBar',
@@ -53,13 +68,40 @@
       return {
         text: '',
         images: [],
-        isLoading: false
+        isLoading: false,
+        editor: null,
+        editSession: null,
+        undoManager: null
 //        isFocus: false,
 //        isDrogover: false,
 //        upStatus: 'default',
 //        errorText: '',
 //        percentText: 0
       }
+    },
+    created: function () {
+//      console.log('created editor')
+//      console.log(window)
+      this.$nextTick(() => {
+//        this.createToolbar()
+        this.createEditor()
+      })
+    },
+    mounted: function () {
+      console.log('created editor mounted')
+      console.log(window)
+//      this.$nextTick(() => {
+//        this.createToolbar()
+      this.createEditor()
+      this.initEditorDrag()
+    },
+    updated () {
+      console.log('created editor updated')
+      console.log(window)
+//      this.$nextTick(() => {
+//        this.createToolbar()
+      this.createEditor()
+//      this.initEditorDrag()
     },
     computed: {
       ...mapGetters({
@@ -70,40 +112,95 @@
       ...mapActions([
         'actionSaveCurrentEditTitle'
       ]),
+      // 设置编辑器拖拽
+      initEditorDrag () {
+        let drag = document.getElementById('newEditMainbar')
+        drag.ondrop = (e) => {
+          e.preventDefault()
+          this.imgDrag(e)
+        }
+      },
+      /*
+       * create markdown editor
+       */
+      createEditor () {
+        this.editor = window.ace.edit('newEditMainbar')
+        this.editor.setTheme('ace/theme/chrome')
+        this.editSession = this.editor.getSession()
+        this.editSession.setMode('ace/mode/markdown')
+//        this.selection = this.editSession.getSelection()
+        this.undoManager = this.editSession.getUndoManager()
+//
+        // editor options
+//        this.editor.setOption('dragEnabled', true)
+//        this.editor.setTheme('ace/theme/chrome')
+        this.editor.$blockScrolling = Infinity
+//        console.log(this.editor)
+//        this.editor.setShowPrintMargin(false)
+//        this.editor.setShowFoldWidgets(false)
+//        console.log(this.editor)
+//
+//        // editor session options
+//        this.editSession.setMode('ace/mode/markdown')
+//        this.editSession.setUseWrapMode(true)
+//
+//        // custom markdown renderer anchor
+//        this.markdownAnchor()
+//
+//        // custom inline style
+//        this.markdownInline()
+//
+//        // editor event
+//        this.editorEvent()
+//
+        // editor keybindings
+        this.editor.setKeyboardHandler('ace/keyboard/vim')
+//        this.editorKeybindings()
+//
+//        // insert content
+//        this.editSession.setValue(content)
+//
+//        this.editor.focus()
+      },
       imgDrag: function (event) {
         // 获取文件列表
-        this.isLoading = true
         event.preventDefault()
         const fileList = event.dataTransfer.files
-        const promise = new Promise(function (resolve, reject) {
-          // 这里编写异步代码
-          imgDrag.handleImageDrag(fileList, (backresult, result) => {
-            if (result === 'success') {
-              resolve(backresult)
-            } else {
-              reject(backresult)
-            }
+        if (fileList.length > 0) {
+          this.isLoading = true
+          const promise = new Promise(function (resolve, reject) {
+            // 这里编写异步代码
+            imgDrag.handleImageDrag(fileList, (backresult, result) => {
+              if (result === 'success') {
+                resolve(backresult)
+              } else {
+                reject(backresult)
+              }
+            })
           })
-        })
-        promise.then((data) => {
-          console.log('成功了上传批量图片')
-          console.log(data)
-          console.log(data.length)
-          for (var i = 0; i < data.length; i++) {
-            console.log(data[i].attributes.images.attributes.url)
-            console.log(data[i].attributes.images.attributes.name)
-            const addurl = '![' + data[i].attributes.images.attributes.name + '](' + data[i].attributes.images.attributes.url + ')' + '\n'
-            this.text += addurl
-          }
-          this.isLoading = false
-        }, function (error) {
-          console.log(error)
-          console.log('出了什么错误')
-        })
+          promise.then((data) => {
+            console.log('成功了上传批量图片')
+            for (var i = 0; i < data.length; i++) {
+              console.log(data[i].attributes.images.attributes.url)
+              console.log(data[i].attributes.images.attributes.name)
+              const addurl = '![' + data[i].attributes.images.attributes.name + '](' + data[i].attributes.images.attributes.url + ')' + '\n'
+//            this.text += addurl
+              console.log(this.editor.getValue())
+              this.editor.setValue(this.editor.getValue() + addurl)
+//          this.text += addurl
+            }
+            this.isLoading = false
+          }, (error) => {
+            console.log(error)
+            console.log('出了什么错误')
+            this.isLoading = false
+          })
+        }
       },
       // 这个是当元素在目标上面的时候
-      handleDragover (e) {
-        e.preventDefault()
+      handleDragover: function (event) {
+        event.preventDefault()
+        console.log('aslkdfj aksdfj k')
       },
       // 这个是元素在目标上面鼠标离开的时候
       handleDragleave (e) {
@@ -111,9 +208,8 @@
       },
       // 处理图片从粘贴板上粘贴
       imgPaste: function (event) {
+        console.log(event)
         this.isLoading = true
-        console.log(event.clipboardData)
-        console.log(event.clipboardData.items)
         const promise = new Promise(function (resolve, reject) {
           // 这里编写异步代码
           imgPaste.handleImagePaste(event, (backresult, result) => {
@@ -128,14 +224,14 @@
           console.log('成功了editor')
           console.log(data.url)
           const addurl = '![' + data.name + '](' + data.url + ')'
-          this.text += addurl
+          this.editor.setValue(this.editor.getValue() + addurl)
           this.isLoading = false
         }, function (error) {
           console.log(error)
           console.log('出了什么错误')
         })
       },
-      editAndSaveTitle: function (editedValue) {
+      editAndSaveTitle: debounce(function (editedValue) {
         // 一份是保存leancloud，一份是保存本地
         console.log(editedValue)
         console.log(this.getCurrentNewArticle.id)
@@ -144,7 +240,7 @@
           articletitle: editedValue
         }
         this.actionSaveCurrentEditTitle(titleData)
-      }
+      }, 300)
     }
   }
 </script>
