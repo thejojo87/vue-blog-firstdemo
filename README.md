@@ -1591,9 +1591,53 @@ paste如果是文字，那么也会上传到图片。
 
 还有要设置自动换行。
 
+2017-07-13 13:28:37
 
+- Todo:
 
+- [x] undo和redo
 
+- [x] 粘贴之后select这个给改掉了
+
+- [x] 拖拽之后没有图片的话就警告
+
+- [x] 自动换行，修改字体大小
+
+- [x] 保存现在的content
+
+- 思路：
+
+今天要做的是保存content，要把这个绑定到leancloud
+因为editor是之后生成的，所以无法通过v-model来自动绑定数据。
+需要在代码里，通过editor实例来存储数据。
+
+首先决定初始化editor。
+现在有3个选择：
+created： nexttrick
+updated:
+mounted:
+
+需要的方法有两个
+一个是initedit一个是draginit
+发现在updated才可以做到这一点。
+
+undo和redo很简单。
+因为ace editor 自己带了undomanager
+
+```javascript
+      // undo 和redo
+      redo () {
+        if (this.undoManager.hasRedo()) {
+          this.undoManager.redo()
+          this.editor.clearSelection()
+        }
+      },
+      undo () {
+        if (this.undoManager.hasUndo()) {
+          this.undoManager.undo()
+        }
+      },
+```
 
 
 

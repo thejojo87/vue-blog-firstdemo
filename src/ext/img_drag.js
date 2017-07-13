@@ -12,6 +12,22 @@ export function avinit () {
   return AV
 }
 
+export function hasImage (fileList) {
+  let list = []
+  // 查看这几个list元素有哪些是图片
+  for (let i = 0; i < fileList.length; i++) {
+    console.log(fileList[i])
+    if (/^image/.test(fileList[i].type)) {
+      list.unshift(fileList[i])
+    }
+  }
+  if (list.length === 0) {
+    return false
+  } else {
+    return true
+  }
+}
+
 export function handleImageDrag (fileList, callback) {
   // event.preventDefault()
   let listToUpload = []

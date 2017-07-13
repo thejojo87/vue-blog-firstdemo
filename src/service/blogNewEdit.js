@@ -13,12 +13,23 @@ export function avinit () {
   return AV
 }
 
+export function saveCurrentEditContent (contentdata, callback) {
+  console.log('changeContent')
+  const newContent = av.Object.createWithoutData('Articles', contentdata.articleid)
+  newContent.set('content', contentdata.articlecontent)
+  newContent.save().then((results) => {
+    callback(results, 'success')
+  }, function (error) {
+    console.log(error)
+    callback(error, 'error')
+  })
+}
+
 export function saveCurrentEditTitle (titledata, callback) {
   console.log('changeTitle')
   const newTitle = av.Object.createWithoutData('Articles', titledata.articleid)
   newTitle.set('title', titledata.articletitle)
   newTitle.save().then((results) => {
-    console.log('新建book完毕了')
     callback(results, 'success')
   }, function (error) {
     console.log(error)

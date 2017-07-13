@@ -7,22 +7,21 @@
         class="note_name mousetrap" name="note_name" type="text" id="note_title" :value="getCurrentNewArticle.attributes.title" >
     </div>
 
-    <div id="newEditToolbar">
+    <div id="newEditToolbar" >
       <Tooltip content="将图片拖到编辑区域即可上传，或直接粘贴剪贴板里的图片" placement="right">
-
       <div class="toolbarImage">
         <Icon type="image" size="20"/>
       </div>
       </Tooltip>
-      <Tooltip content="撤销" placement="top">
 
-        <div class="toolbarImage">
+      <Tooltip content="撤销" placement="top">
+        <div class="toolbarImage" v-on:click="undo()">
           <Icon type="ios-undo" size="20"/>
         </div>
       </Tooltip>
-      <Tooltip content="重做" placement="top">
 
-        <div class="toolbarImage">
+      <Tooltip content="重做" placement="top">
+        <div class="toolbarImage" v-on:click="redo()">
           <Icon type="ios-redo" size="20"/>
         </div>
       </Tooltip>
@@ -53,6 +52,13 @@
     <div id="newEditBackground" v-else="">
       <span>简&nbsp;书</span>
     </div>
+
+    <Modal
+      v-model="isDragHasImage"
+      title="拖拽图片出错了">
+      <p>拖拽的文件列表中没有图片，请重新尝试</p>
+    </Modal>
+
   </div>
 </template>
 
@@ -66,12 +72,14 @@
     name: 'NewEditBar',
     data () {
       return {
+        isDragHasImage: false,
         text: '',
         images: [],
         isLoading: false,
         editor: null,
         editSession: null,
-        undoManager: null
+        undoManager: null,
+        selection: null
 //        isFocus: false,
 //        isDrogover: false,
 //        upStatus: 'default',
@@ -80,20 +88,15 @@
       }
     },
     created: function () {
-//      console.log('created editor')
-//      console.log(window)
-      this.$nextTick(() => {
-//        this.createToolbar()
-        this.createEditor()
-      })
+      console.log('created editor')
+//      this.$nextTick(() => {
+//        this.createEditor()
+//        this.initEditorDrag()
+//      })
     },
     mounted: function () {
       console.log('created editor mounted')
       console.log(window)
-//      this.$nextTick(() => {
-//        this.createToolbar()
-      this.createEditor()
-      this.initEditorDrag()
     },
     updated () {
       console.log('created editor updated')
@@ -101,7 +104,7 @@
 //      this.$nextTick(() => {
 //        this.createToolbar()
       this.createEditor()
-//      this.initEditorDrag()
+      this.initEditor()
     },
     computed: {
       ...mapGetters({
@@ -110,11 +113,18 @@
     },
     methods: {
       ...mapActions([
-        'actionSaveCurrentEditTitle'
+        'actionSaveCurrentEditTitle',
+        'actionSaveCurrentEditContent'
       ]),
       // 设置编辑器拖拽
-      initEditorDrag () {
-        let drag = document.getElementById('newEditMainbar')
+      initEditor () {
+        console.log('init editor value')
+        this.editor.setValue(this.getCurrentNewArticle.attributes.content)
+        this.editor.clearSelection()
+        const drag = document.getElementById('newEditMainbar')
+        drag.ondragover = function (e) {
+          e.preventDefault()
+        }
         drag.ondrop = (e) => {
           e.preventDefault()
           this.imgDrag(e)
@@ -128,21 +138,20 @@
         this.editor.setTheme('ace/theme/chrome')
         this.editSession = this.editor.getSession()
         this.editSession.setMode('ace/mode/markdown')
-//        this.selection = this.editSession.getSelection()
+        this.selection = this.editSession.getSelection()
         this.undoManager = this.editSession.getUndoManager()
-//
         // editor options
 //        this.editor.setOption('dragEnabled', true)
-//        this.editor.setTheme('ace/theme/chrome')
         this.editor.$blockScrolling = Infinity
-//        console.log(this.editor)
-//        this.editor.setShowPrintMargin(false)
+        this.editor.setFontSize(20)
+        this.editor.setHighlightActiveLine(true)
+        // 打印的线-有必要吗？
+        this.editor.setShowPrintMargin(false)
+        // 不知道这是什么
 //        this.editor.setShowFoldWidgets(false)
-//        console.log(this.editor)
-//
-//        // editor session options
-//        this.editSession.setMode('ace/mode/markdown')
-//        this.editSession.setUseWrapMode(true)
+        // 自动换行
+        this.editSession.setUseWrapMode(true)
+//        this.editor.setShowFoldWidgets(false)
 //
 //        // custom markdown renderer anchor
 //        this.markdownAnchor()
@@ -150,11 +159,13 @@
 //        // custom inline style
 //        this.markdownInline()
 //
-//        // editor event
-//        this.editorEvent()
+        // editor event
+        this.editorEvent()
 //
         // editor keybindings
         this.editor.setKeyboardHandler('ace/keyboard/vim')
+        // 自动换行,设置为off关闭
+//        this.editor.setOption('wrap', 'free')
 //        this.editorKeybindings()
 //
 //        // insert content
@@ -162,11 +173,56 @@
 //
 //        this.editor.focus()
       },
+      /*
+       * listen editor event
+       */
+      editorEvent () {
+        // listen editor 'change' event and render markdown
+        // 保存本地，并且传送到leancloud，修改articles数据，并且保存。
+        this.editSession.on('change', debounce(() => {
+          const content = this.editSession.getValue()
+          const contentData = {
+            articleid: this.getCurrentNewArticle.id,
+            articlecontent: content
+          }
+          this.actionSaveCurrentEditContent(contentData)
+//          console.log(content)
+//          this.slugCache = {}
+//          this.tableOfContent = []
+//          this.lines = this.editSession.getLength()
+//          this.words = content.replace(/\s*/g, '').length
+//          IncrementalDOM.patch(
+//            this.$refs.preview,
+//            markdown.renderToIncrementalDOM(content)
+//          )
+        }, 1000))
+      },
+      // undo 和redo
+      redo () {
+        if (this.undoManager.hasRedo()) {
+          this.undoManager.redo()
+          this.editor.clearSelection()
+        }
+      },
+      undo () {
+        if (this.undoManager.hasUndo()) {
+          this.undoManager.undo()
+        }
+      },
+      /* clear editor content */
+      clear () {
+        this.editSession.setValue('')
+        this.undoManager.reset()
+        this.editor.focus()
+      },
       imgDrag: function (event) {
         // 获取文件列表
         event.preventDefault()
         const fileList = event.dataTransfer.files
-        if (fileList.length > 0) {
+        // 先判断里面有没有图片
+        let hasImage = false
+        hasImage = imgDrag.hasImage(fileList)
+        if (fileList.length > 0 && hasImage) {
           this.isLoading = true
           const promise = new Promise(function (resolve, reject) {
             // 这里编写异步代码
@@ -189,12 +245,16 @@
               this.editor.setValue(this.editor.getValue() + addurl)
 //          this.text += addurl
             }
+            this.editor.clearSelection()
             this.isLoading = false
           }, (error) => {
             console.log(error)
             console.log('出了什么错误')
             this.isLoading = false
           })
+        } else {
+          // 提示消息说，里面没有图片
+          this.isDragHasImage = true
         }
       },
       // 这个是当元素在目标上面的时候
@@ -226,6 +286,7 @@
           const addurl = '![' + data.name + '](' + data.url + ')'
           this.editor.setValue(this.editor.getValue() + addurl)
           this.isLoading = false
+          this.editor.clearSelection()
         }, function (error) {
           console.log(error)
           console.log('出了什么错误')
