@@ -1669,6 +1669,8 @@ undo和redo很简单。
 - [x] 粘贴文本的bug需要修改一下
 - [x] 每一个undo和redo是共有的。需要把这个分开
 - [x] 发现了当切换article的时候因为要重新给编辑器赋值，所以触发了change，所以重新保存leancloud动作，这个很浪费我感觉。
+- [x] 添加中间的边框
+- [x] 预览的时候隐藏navbar
 
 - 思路
 
@@ -1721,4 +1723,64 @@ http://ithelp.ithome.com.tw/articles/10187812
 我可不想重新写一遍啊
 到底该怎么做呢？
 
+第一个思路是：
+preview的router里component传入两个。
+一个是editor整个传进来，另一个是新建一个模块，marked渲染过的模块。
+
+模块化的优点是，什么都不用重写。
+直接该有的功能都有了。
+但是遇到的问题是，ace editor发现为0
+
+因为重新载入的时候是
+created 和mounted
+奇怪的是，ace editor在新的界面里完全没有。
+这是怎么回事？高度为0
+莫非是因为css的问题？
+果然如此，只是因为我没有设置高度罢了。
+
+今天要搞得是进入编辑模式之后的工具栏
+普通编辑模式的工具栏，和进入编辑模式的工具栏没有太多区别。
+但是因为我共用一个组件。
+所有的逻辑如果用v-if，显得太过于麻烦。
+要不要用slot？
+还是说算了？
+
+还有一个问题就是，返回该怎么做？
+我一开始使用了在按钮里加了个router-link
+但是一如我在nav里发现有时候点击按钮，router-link
+完全没反应一样。
+必须要按下图标的正中间才可以。
+如果按下边上，那么只启动了click-修改了isPreview
+但是链接并没有被启动。
+因此我决定，用js，来控制跳转。
+
+```javascript
+      // 设置表示进入preview模式
+      savePreviewMode (isPreviewMode) {
+        this.actionSavePreviewMode(isPreviewMode)
+        const router = this.$router
+        if (!isPreviewMode) {
+          router.push({ name: 'BlogNew' })
+        } else {
+          router.push({ name: 'BlogNewPreview' })
+        }
+      },
+```
+
+但是链接的返回解决了。
+但是因为重新载入导致的一系列的数据重新下载，等行为
+是不必要且浪费的。
+如何才能不重新下载数据呢？
+
+在newBookBar.vue，created这里开始的。
+要在这里加一个判断吧。
+是否是从写文章这里进入的。
+但是这又会引发新的问题。
+刷新都不能获取数据了。
+
+最好的办法依然是，设置一个isback判断字段。
+默认数据为false
+进入的时候，如果isback为true，那么就不进行更新数据。
+当进入预览模式的时候，isback设置为true
+返回界面之后就又重新设置为false
 

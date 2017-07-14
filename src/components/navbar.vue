@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="!getIsPreview">
     <el-menu id="navbar" theme="dark" :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
       <div id="navbar-menu">
         <el-menu-item index="1"><router-link :to="{name: 'Blog'}">jojo's blog</router-link></el-menu-item>
@@ -125,7 +125,8 @@
     },
     computed: {
       ...mapGetters({
-        getCurrentUser: 'getCurrentUser'
+        getCurrentUser: 'getCurrentUser',
+        getIsPreview: 'getIsPreview'
       })
     },
     methods: {

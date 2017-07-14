@@ -5,19 +5,30 @@ import * as blogNewEdit from '@/service/blogNewEdit'
 
 const types = {
   SAVE_CURRENT_EDIT_TITLE: 'blogNewEdit/SAVE_CURRENT_EDIT_TITLE',
-  SAVE_CURRENT_EDIT_CONTENT: 'blogNewEdit/SAVE_CURRENT_EDIT_CONTENT'
+  SAVE_CURRENT_EDIT_CONTENT: 'blogNewEdit/SAVE_CURRENT_EDIT_CONTENT',
+  SAVE_PREVIEW_MODE: 'blogNewEdit/SAVE_PREVIEW_MODE',
+  SAVE_ISBACK_FROM_VIEW_MODE: 'blogNewEdit/SAVE_ISBACK_FROM_VIEW_MODE'
   // SAVE_CURRENT_USER: 'login/SAVE_CURRENT_USER',
   // INIT_CURRENT_USER: 'login/INIT_CURRENT_USER'
 }
 const state = {
+  isPreview: false,
+  isBackFromViewMode: false
   // currentUser: ''
 }
 const getters = {
-  // getCurrentUser: state => state.currentUser
+  getIsPreview: state => state.isPreview,
+  getIsBackFromViewMode: state => state.isBackFromViewMode
 }
 
 // actions
 const actions = {
+  actionSavePreviewMode ({ commit }, isPreviewMode) {
+    commit(types.SAVE_PREVIEW_MODE, isPreviewMode)
+  },
+  actionSaveIsBackFromViewMode ({ commit }, isBackFromViewMode) {
+    commit(types.SAVE_ISBACK_FROM_VIEW_MODE, isBackFromViewMode)
+  },
   // 保存正在编辑的文章内容
   actionSaveCurrentEditContent ({ commit, rootState }, contentdata) {
     const promise = new Promise(function (resolve, reject) {
@@ -37,12 +48,9 @@ const actions = {
       })
     })
     promise.then(function (data) {
-      console.log('保存editContent数据成功了')
-      console.log(data)
       commit(types.SAVE_CURRENT_EDIT_CONTENT, data)
     }, function (error) {
       console.log(error)
-      console.log('出了什么错误')
     })
   },
   actionSaveCurrentEditTitle ({ commit, rootState }, titledata) {
@@ -76,6 +84,12 @@ const actions = {
 
 // mutations
 const mutations = {
+  [types.SAVE_PREVIEW_MODE] (state, isPreviewMode) {
+    state.isPreview = isPreviewMode
+  },
+  [types.SAVE_ISBACK_FROM_VIEW_MODE] (state, isBackFromViewMode) {
+    state.isBackFromViewMode = isBackFromViewMode
+  },
   [types.SAVE_CURRENT_EDIT_TITLE] (state, titledata) {
     console.log('要修改本地名称')
     console.log(titledata)

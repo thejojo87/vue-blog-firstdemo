@@ -14,9 +14,9 @@
   export default {
     name: 'BlogNew',
     components: {
-      NewEditBar,
       newBookBar,
-      newArticleBar
+      newArticleBar,
+      NewEditBar
     },
     computed: {
       ...mapGetters({})

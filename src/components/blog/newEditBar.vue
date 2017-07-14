@@ -25,10 +25,14 @@
           <Icon type="ios-redo" size="20"/>
         </div>
       </Tooltip>
-
-      <Tooltip content="切换到预览模式" placement="top">
-        <div class="toolbarImage" v-on:click="redo()">
-          <Icon type="ios-book-outline" size="20"/>
+      <Tooltip content="切换到预览模式" placement="top" v-if="!getIsPreview">
+        <div class="toolbarImage" v-on:click="savePreviewMode(true)">
+              <Icon type="ios-book-outline" size="20"/>
+        </div>
+      </Tooltip>
+      <Tooltip content="返回" placement="top" v-if="getIsPreview">
+        <div class="toolbarImage" v-on:click="savePreviewMode(false)">
+              <Icon type="ios-book-outline" size="20"/>
         </div>
       </Tooltip>
     </div>
@@ -86,14 +90,16 @@
     },
     created: function () {
       console.log('created editor')
-      this.$nextTick(() => {
-        this.createEditor()
-        this.initEditor()
-      })
+//      this.$nextTick(() => {
+//        this.createEditor()
+//        this.initEditor()
+//      })
     },
     mounted: function () {
       console.log('created editor mounted')
       console.log(window)
+      this.createEditor()
+      this.initEditor()
     },
     updated () {
       console.log('created editor updated')
@@ -102,11 +108,6 @@
         this.initEditor()
       }
     },
-    computed: {
-      ...mapGetters({
-        getCurrentNewArticle: 'getCurrentNewArticle'
-      })
-    },
     watch: {
       getCurrentNewArticle: function (val, oldVal) {
         this.createEditor()
@@ -114,23 +115,33 @@
         // 既然book变了，article变了，那么就应该改变当前的article才对。
       }
     },
+    computed: {
+      ...mapGetters({
+        getCurrentNewArticle: 'getCurrentNewArticle',
+        getIsPreview: 'getIsPreview'
+      })
+    },
     methods: {
       ...mapActions([
         'actionSaveCurrentEditTitle',
-        'actionSaveCurrentEditContent'
+        'actionSaveCurrentEditContent',
+        'actionSavePreviewMode',
+        'actionSaveIsBackFromViewMode'
       ]),
+      // 设置表示进入preview模式
+      savePreviewMode (isPreviewMode) {
+        this.actionSavePreviewMode(isPreviewMode)
+        const router = this.$router
+        if (!isPreviewMode) {
+          router.push({ name: 'BlogNew' })
+        } else {
+          // 为了返回的时候能和进入newedit的时候有所区别
+          this.actionSaveIsBackFromViewMode(true)
+          router.push({ name: 'BlogNewPreview' })
+        }
+      },
       // 设置编辑器拖拽
       initEditor () {
-        console.log('init editor value')
-        console.log('init editor value')
-        console.log('init editor value')
-        console.log('init editor value')
-        console.log('init editor value')
-        console.log('init editor value')
-        console.log('init editor value')
-        console.log('init editor value')
-        console.log('init editor value')
-        console.log('init editor value')
 //        this.editor.session.setValue()
 //        this.editSession.setValue()
         this.editor.getSession().setValue(this.getCurrentNewArticle.attributes.content)

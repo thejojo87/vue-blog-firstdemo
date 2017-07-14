@@ -40,17 +40,21 @@
       NewBookList
     },
     created: function () {
-      this.actionGetBooks()
+      if (!this.getIsBackFromViewMode) {
+        this.actionGetBooks()
+      }
     },
     computed: {
       ...mapGetters({
-        getCurrentUser: 'getCurrentUser'
+        getCurrentUser: 'getCurrentUser',
+        getIsBackFromViewMode: 'getIsBackFromViewMode'
       })
     },
     methods: {
       ...mapActions([
         'actionCreateNewBook',
-        'actionGetBooks'
+        'actionGetBooks',
+        'actionSaveIsBackFromViewMode'
       ]),
       addNewBook () {
         this.isAddBook = !this.isAddBook
