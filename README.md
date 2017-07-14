@@ -1621,6 +1621,28 @@ mounted:
 一个是initedit一个是draginit
 发现在updated才可以做到这一点。
 
+但是不能在updated执行。
+因为如果这样做的话，修改了插入内容。
+这个会导致update操作。引发读取数据操作。
+而这个时候会导致重新刷新，而插入的内容还没来得及读取就引发了读取上一个。
+
+initeditor始终是需要watch current article吗
+
+放在watch get current变化的时候，固然点击文章就会启动。
+但是依然有一个bug。
+就是当进入new 界面的时候，
+因为会更改当前的article，自然引发新建一个editor。
+但是这个时候，div元素还没有渲染出来，所以编辑器初始化失败。
+
+只有在updated之后才可以做到。
+但是updated又总是触发又白白浪费性能。
+
+一个是，找到一个方法，等待刷新之后再生成。
+另一个是update这里加一个判断，如果this.editor元素不存在,那么
+就表示是初始化，所以进行一个生成editor实例。
+如果实例已经存在，那么就什么也不做。
+
+
 undo和redo很简单。
 因为ace editor 自己带了undomanager
 
@@ -1639,5 +1661,64 @@ undo和redo很简单。
       },
 ```
 
+2017-07-14 00:41:13
+
+- Todo:
+
+- [ ] 预览模式
+- [x] 粘贴文本的bug需要修改一下
+- [x] 每一个undo和redo是共有的。需要把这个分开
+- [x] 发现了当切换article的时候因为要重新给编辑器赋值，所以触发了change，所以重新保存leancloud动作，这个很浪费我感觉。
+
+- 思路
+
+因为有个历史版本这个模式。
+思路可能是一个article，设置一个pointer，
+当destory的时候就保存一个历史版本。
+当按下保存按钮的时候也保存一个历史版本。
+以后可以做，但是总觉得这个没什么太大用处。
+
+因为undo和redo是共有的。
+所以到不同的文章，undo和redo会有个bug。
+我要不要做呢？
+还是每次只要还article的时候，把undo和redo也给存进去？
+
+还是说清空就可以了？
+
+简书是使用清空的方式。
+转换文章的时候，之前保存的undo，redo都会消失。
+
+我在update的时候使用了reset，但是不知道为什么不好用。
+
+在这里找到了答案。
+
+https://github.com/scraperwiki/code-scraper-in-browser-tool/commit/24e0ecd78c6b99df43e70d638ca56ed72d67edab
+
+要看github问题下面的代码。
+
+发现了当切换article的时候因为要重新给编辑器赋值，所以触发了change，所以重新保存leancloud动作，这个很浪费我感觉。
+增加了一个判定，如果和当前的content一样，就不进行动作。
+
+预览模式的话，简书是进入一个preview这个网页的。
+esc就返回。
+
+怎么做呢？
+是复用组件？还是传送数据过去？
+我发现了一个错误。
+简书里，选择书和文章，网址都会变化。
+我一直没这么做。
+要不要修改源代码？还是没必要？
+我需要看一下vue-router
+应该要做成下面的样子
+
+http://ithelp.ithome.com.tw/articles/10187812
+
+首先载入new 的router，然后载入了子router的方式。
+但是修改的话太麻烦了。还是算了吧。
+
+不过既然已经存在着
+编辑器页面我已经写完了，那么我能否重用呢？
+我可不想重新写一遍啊
+到底该怎么做呢？
 
 

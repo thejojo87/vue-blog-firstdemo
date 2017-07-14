@@ -38,16 +38,11 @@ export function handleImagePaste (event, callback) {
         console.log('出了什么错误')
         callback(error, 'error')
       })
-      // let result = upload.fileUpload(file)
-      // console.log(result)
-      // console.log(upload.fileUpload(file))
-      // return 'ccccc'
-      // return this.fileUpload([file])
     }
   }
 }
 
-function isImage (items) {
+export function isImage (items) {
   var i = 0
   var item
   while (i < items.length) {

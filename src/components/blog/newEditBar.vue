@@ -25,19 +25,16 @@
           <Icon type="ios-redo" size="20"/>
         </div>
       </Tooltip>
+
+      <Tooltip content="切换到预览模式" placement="top">
+        <div class="toolbarImage" v-on:click="redo()">
+          <Icon type="ios-book-outline" size="20"/>
+        </div>
+      </Tooltip>
     </div>
 
     <div id="newEditMainbar"
           v-on:paste="imgPaste($event)">
-
-
-      <!--<textarea placeholder="Write a comment or drag your files here..."-->
-                <!--v-model="text"-->
-                <!--v-on:paste="imgPaste($event)"-->
-                <!--v-on:dragover="handleDragover($event)"-->
-                <!--@dragleave="handleDragleave">-->
-                <!--&lt;!&ndash;v-on:drop="imgDrag"&ndash;&gt;-->
-      <!--</textarea>-->
     </div>
     <div>
       <!--<Col class="demo-spin-col" span="8">-->
@@ -89,10 +86,10 @@
     },
     created: function () {
       console.log('created editor')
-//      this.$nextTick(() => {
-//        this.createEditor()
-//        this.initEditorDrag()
-//      })
+      this.$nextTick(() => {
+        this.createEditor()
+        this.initEditor()
+      })
     },
     mounted: function () {
       console.log('created editor mounted')
@@ -100,16 +97,22 @@
     },
     updated () {
       console.log('created editor updated')
-      console.log(window)
-//      this.$nextTick(() => {
-//        this.createToolbar()
-      this.createEditor()
-      this.initEditor()
+      if (this.editor === null) {
+        this.createEditor()
+        this.initEditor()
+      }
     },
     computed: {
       ...mapGetters({
         getCurrentNewArticle: 'getCurrentNewArticle'
       })
+    },
+    watch: {
+      getCurrentNewArticle: function (val, oldVal) {
+        this.createEditor()
+        this.initEditor()
+        // 既然book变了，article变了，那么就应该改变当前的article才对。
+      }
     },
     methods: {
       ...mapActions([
@@ -119,7 +122,18 @@
       // 设置编辑器拖拽
       initEditor () {
         console.log('init editor value')
-        this.editor.setValue(this.getCurrentNewArticle.attributes.content)
+        console.log('init editor value')
+        console.log('init editor value')
+        console.log('init editor value')
+        console.log('init editor value')
+        console.log('init editor value')
+        console.log('init editor value')
+        console.log('init editor value')
+        console.log('init editor value')
+        console.log('init editor value')
+//        this.editor.session.setValue()
+//        this.editSession.setValue()
+        this.editor.getSession().setValue(this.getCurrentNewArticle.attributes.content)
         this.editor.clearSelection()
         const drag = document.getElementById('newEditMainbar')
         drag.ondragover = function (e) {
@@ -164,8 +178,6 @@
 //
         // editor keybindings
         this.editor.setKeyboardHandler('ace/keyboard/vim')
-        // 自动换行,设置为off关闭
-//        this.editor.setOption('wrap', 'free')
 //        this.editorKeybindings()
 //
 //        // insert content
@@ -181,20 +193,13 @@
         // 保存本地，并且传送到leancloud，修改articles数据，并且保存。
         this.editSession.on('change', debounce(() => {
           const content = this.editSession.getValue()
-          const contentData = {
-            articleid: this.getCurrentNewArticle.id,
-            articlecontent: content
+          if (content !== this.getCurrentNewArticle.attributes.content) {
+            const contentData = {
+              articleid: this.getCurrentNewArticle.id,
+              articlecontent: content
+            }
+            this.actionSaveCurrentEditContent(contentData)
           }
-          this.actionSaveCurrentEditContent(contentData)
-//          console.log(content)
-//          this.slugCache = {}
-//          this.tableOfContent = []
-//          this.lines = this.editSession.getLength()
-//          this.words = content.replace(/\s*/g, '').length
-//          IncrementalDOM.patch(
-//            this.$refs.preview,
-//            markdown.renderToIncrementalDOM(content)
-//          )
         }, 1000))
       },
       // undo 和redo
@@ -269,28 +274,32 @@
       // 处理图片从粘贴板上粘贴
       imgPaste: function (event) {
         console.log(event)
-        this.isLoading = true
-        const promise = new Promise(function (resolve, reject) {
-          // 这里编写异步代码
-          imgPaste.handleImagePaste(event, (backresult, result) => {
-            if (result === 'success') {
-              resolve(backresult)
-            } else {
-              reject(backresult)
-            }
+        if (!imgPaste.isImage(event.clipboardData.items)) {
+          console.log('这不是图片复制')
+        } else {
+          this.isLoading = true
+          const promise = new Promise(function (resolve, reject) {
+            // 这里编写异步代码
+            imgPaste.handleImagePaste(event, (backresult, result) => {
+              if (result === 'success') {
+                resolve(backresult)
+              } else {
+                reject(backresult)
+              }
+            })
           })
-        })
-        promise.then((data) => {
-          console.log('成功了editor')
-          console.log(data.url)
-          const addurl = '![' + data.name + '](' + data.url + ')'
-          this.editor.setValue(this.editor.getValue() + addurl)
-          this.isLoading = false
-          this.editor.clearSelection()
-        }, function (error) {
-          console.log(error)
-          console.log('出了什么错误')
-        })
+          promise.then((data) => {
+            console.log('成功了editor')
+            console.log(data.url)
+            const addurl = '![' + data.name + '](' + data.url + ')'
+            this.editor.setValue(this.editor.getValue() + addurl)
+            this.isLoading = false
+            this.editor.clearSelection()
+          }, function (error) {
+            console.log(error)
+            console.log('出了什么错误')
+          })
+        }
       },
       editAndSaveTitle: debounce(function (editedValue) {
         // 一份是保存leancloud，一份是保存本地
