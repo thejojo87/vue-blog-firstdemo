@@ -1784,3 +1784,217 @@ created 和mounted
 当进入预览模式的时候，isback设置为true
 返回界面之后就又重新设置为false
 
+发现 效果很完美。
+
+我今天使用了git的 branch功能
+
+方法是，首先创建分支。
+然后提交。
+然后切换回master
+然后合并。
+
+http://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000/001375840038939c291467cc7c747b1810aab2fb8863508000
+
+下一步就是markdown的渲染模块了。
+
+我突然意识到，如果使用axios或许也可以做到。
+
+2017-07-15 00:43:21
+
+- Todo:
+
+- [x] 预览模式的markdown部分
+
+- 思路
+
+markdown parser有两个方案，
+marked-有教程
+markdown-it-menote，mavonEditor
+
+markdown-it 貌似是使用插件的。
+代码里都是使用了一堆插件，然后封装成一个markdown模块。
+在编辑器里引用，
+highlight.js 貌似也有。
+我有必要一个个设置吗？
+还是直接使用marked就完了？
+无法轻易抉择呢。
+还是用markdown-it吧。
+先不是用插件和highlight，最小的部分开始一步步增加。
+
+渲染在哪里比较好呢？
+如果是在editorbar，有个好处就是，当编辑的时候可以立即获取数据。
+但是如果是在preview界面，首先要从editor获取消息。
+有点麻烦呢。
+而且如果从vuex里获取，那么因为editor会在上传到leancloud之后，再保存本地数据。
+会有一点延迟，这样真的合适吗？
+
+还是决定在渲染的同时保存在vuex里。
+然后preview只是读取并且渲染就可以了。
+
+渲染成功了，但是我如果用字符串来读取的话，不会有效果的。
+需要把html元素给渲染上。需要的是v-html
+
+还有保存在vuex，再读取，依然有大概一秒钟的延迟。
+但是其实这个是因为我自己的关系。
+为了减少leancloud的消耗，我在当文字变化的时候，间隔1秒对比数据。
+
+我现在需要两个变化。
+为了编辑器的流畅，我需要立即更新本地数据。
+但是为了减少数据存储，我需要每1000秒才更新一次leancloud。
+
+使用markdown-it，渲染了文字是成功了。
+比如一个个方块，如h1什么的。
+但是默认如果没有装插件，那么不支持todo什么的插件。
+我要不要一个个插件装上呢。
+还是说用别的？
+
+todo这个插件游泳了，但是列表这个功能还不好使。
+
+
+
+但是你会发现样式很糟糕。
+需要github-markdown.css
+
+https://github.com/sindresorhus/github-markdown-css
+下载并且引入
+
+剩下的问题是，同步输入的时候，scroll
+
+这个应该怎么做？
+非常意外的是，简书的编辑居然没有这个功能。
+编辑区不同步向下拉。
+应该是随时获取当前行，然后下拉吧。
+
+
+2017-07-15 00:43:21
+
+- Todo:
+
+- [x] markdown同步下拉
+- [ ] 写作模式-全屏
+- [ ] 图片插入应该在指定的位置，而不是尾部-insert才对吧
+- [ ] highlight.js 代码高亮
+
+- 思路
+
+```javascript
+    _moveCursor(row, column) {
+      this.editor.moveCursorTo(row, column)
+      this.editor.focus()
+    },
+```
+
+应该是这两段,一个是editor滑动
+一个是preview滑动
+
+
+```javascript
+      let editorScroll = false
+      let previewScroll = false
+      // sync scroll editor <-> preview
+      const clientHeight = document.querySelector('.ace_scroller').clientHeight
+      this.editSession.on('changeScrollTop', (scrollTop) => {
+        if (editorScroll) {
+          editorScroll = false
+          return
+        }
+        previewScroll = true
+        const lineHeight = this.editor.renderer.lineHeight
+        const height = this.editSession.getScreenLength() * lineHeight - clientHeight
+        const ratio = parseFloat(scrollTop) / height
+        const calScrollTop = (this.$refs.preview.scrollHeight - this.$refs.preview.clientHeight) * ratio
+        this.$refs.preview.scrollTop = calScrollTop
+      })
+
+      // editor preview sync scroll
+      this.$refs.preview.addEventListener('scroll', () => {
+        if (previewScroll) {
+          previewScroll = false
+          return
+        }
+        editorScroll = true
+        const height = this.$refs.preview.scrollHeight - this.$refs.preview.clientHeight
+        const ratio = parseFloat(this.$refs.preview.scrollTop) / height
+        const lineHeight = this.editor.renderer.lineHeight
+        const scrollTop = (this.editSession.getScreenLength() * lineHeight - clientHeight) * ratio
+        if (scrollTop > 0) this.editSession.setScrollTop(scrollTop)
+      })
+```
+
+menote实现因为preview就在同一个editor组件之下。
+所以使用了ref功能当editor中scroll变化的时候，
+同时变化preview。
+但是我是使用了组件。
+editor和preview部分是兄弟组件。
+ref是父元素获取子元素用的。
+
+所以可以使用vuex。
+数据只要保存到vuex，然后watch变化，就可以了吧。
+遇到了一个问题就是scrollTop 无法赋值
+原因就在于，父亲div高度如果为200，子div高度如果为400.
+那么就会出现滚动条。但是，这个滚动条是属于父亲的，而不是子元素的。
+试图对子元素scrollTop操作就是为0
+
+高度计算好像有点不对劲。
+精确地数据需要我再反复研究一下。
+
+这个是一个实现，可以mark一下
+https://github.com/jonschlinkert/remarkable/blob/dev/demo/assets/index.js#L213
+
+有可能是因为，这个是按照比例来移动的。
+比如说我在100行当中第50行。那么就是editor中一半的位置。
+但是图片占很大位置啊。
+
+问题就像这样
+
+http://liuhao.im/english/2015/11/10/the-sync-scroll-of-markdown-editor-in-javascript.html
+
+思路或许是，获取本页里markdown元素。
+然后定位到那里。
+
+第一步，获取top line的line number
+getFirstVisibleRow
+
+但是这里遇到问题。
+当scroll启动的时候，假设32行。
+那么滑动之后就变成了43行。
+我需要的不是32行，而是43。
+需要的是滑动完成后的行数。要么延长0.1秒执行？
+怎么都没有办法，只好手动加了加5行。
+
+
+第二步，获取从这一行到下面行的html
+
+获取两行估计够了吧，或许不过如果是代码块会不会有问题？
+getLines()
+不过这个返回的是一个数组
+把这个保存到vuex里，然后监控，一旦有变化，那么就启动
+
+或者说从这一行一直获取第一个#开头的节点元素。
+然后把这个节点发过去？
+
+最后是这么解决的：
+首先获取当前页面元素到最后的editor里的text转化成markdown格式。
+新建一个div元素，然后赋值。
+然后搜查所有p h1,等等段落的元素个数。
+保存到vuex里。
+
+在preview界面，获取元素个数。
+搜索preview里， ph1 等等个数。
+减去vuex里的个数。
+然后获取这个元素的offsetTop
+最后scrollTop设置为这个就完成了。
+
+2017-07-17 05:57:22
+
+- Todo:
+
+- [ ] 写作模式-全屏
+- [ ] 编辑栏全部
+- [ ] 沉浸式阅读
+- [ ] 图片插入应该在指定的位置，而不是尾部-insert才对吧
+- [ ] highlight.js 代码高亮
+
+- 思路
+
+写作的全屏模式还是需要的。

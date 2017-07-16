@@ -27,12 +27,12 @@
       </Tooltip>
       <Tooltip content="切换到预览模式" placement="top" v-if="!getIsPreview">
         <div class="toolbarImage" v-on:click="savePreviewMode(true)">
-              <Icon type="ios-book-outline" size="20"/>
+              <Icon type="ios-book" size="20"/>
         </div>
       </Tooltip>
       <Tooltip content="返回" placement="top" v-if="getIsPreview">
         <div class="toolbarImage" v-on:click="savePreviewMode(false)">
-              <Icon type="ios-book-outline" size="20"/>
+              <Icon type="ios-book" size="20"/>
         </div>
       </Tooltip>
     </div>
@@ -68,6 +68,7 @@
   import * as imgPaste from '@/ext/img_paste'
   import * as imgDrag from '@/ext/img_drag'
   import { debounce } from 'underscore'
+  import markdown from '@/ext/markdown'
 
   export default {
     name: 'NewEditBar',
@@ -113,12 +114,23 @@
         this.createEditor()
         this.initEditor()
         // 既然book变了，article变了，那么就应该改变当前的article才对。
+      },
+      // 当preview的scroll变化，editor也要同步变化
+      getPreviewScrollRatio: function (val, oldVal) {
+        // Todo: 高度计算好像有点不对劲，还有保留两者不同步或许也蛮好
+//        const clientHeight = document.querySelector('.ace_scroller').clientHeight
+//        const lineHeight = this.editor.renderer.lineHeight
+//        const scrollTop = (this.editSession.getScreenLength() * lineHeight - clientHeight) * val
+//        if (scrollTop > 0) {
+//          this.editSession.setScrollTop(scrollTop)
+//        }
       }
     },
     computed: {
       ...mapGetters({
         getCurrentNewArticle: 'getCurrentNewArticle',
-        getIsPreview: 'getIsPreview'
+        getIsPreview: 'getIsPreview',
+        getPreviewScrollRatio: 'getPreviewScrollRatio'
       })
     },
     methods: {
@@ -126,7 +138,9 @@
         'actionSaveCurrentEditTitle',
         'actionSaveCurrentEditContent',
         'actionSavePreviewMode',
-        'actionSaveIsBackFromViewMode'
+        'actionSaveIsBackFromViewMode',
+        'actionSaveCurrentEditContentPreview',
+        'actionSaveScrollRatio'
       ]),
       // 设置表示进入preview模式
       savePreviewMode (isPreviewMode) {
@@ -202,16 +216,51 @@
       editorEvent () {
         // listen editor 'change' event and render markdown
         // 保存本地，并且传送到leancloud，修改articles数据，并且保存。
-        this.editSession.on('change', debounce(() => {
+        this.editSession.on('change', () => {
           const content = this.editSession.getValue()
+          // 这个判断的目的是当切换article的时候别无谓的保存。
           if (content !== this.getCurrentNewArticle.attributes.content) {
             const contentData = {
               articleid: this.getCurrentNewArticle.id,
               articlecontent: content
             }
-            this.actionSaveCurrentEditContent(contentData)
+            this.actionSaveCurrentEditContent(contentData, debounce(() => {
+            }), 300)
           }
-        }, 1000))
+          // 这里要做的是，渲染，并且保存到store里
+          const markdownPreview = markdown.render(content)
+          this.actionSaveCurrentEditContentPreview(markdownPreview)
+        })
+        // 当editbarscroll的时候，同步滑动preview
+//        const clientHeight = document.querySelector('.ace_scroller').clientHeight
+        this.editSession.on('changeScrollTop', (scrollTop) => {
+          var firstline = this.editor.getFirstVisibleRow() + 5
+          var lastline = this.editSession.getLength()
+//          const range = new Range(3, 0, 1, 0)
+          const range = {
+            start: {
+              row: firstline,
+              column: 0
+            },
+            end: {
+              row: lastline,
+              column: 0
+            }
+          }
+//          const selectionRange = this.editor.getSelectionRange(range)
+//          const content = this.editSession.getTextRange(selectionRange)
+          const content = this.editSession.getTextRange(range)
+          var bbb = markdown.render(content)
+          // 是不是新建一个dom元素？
+          var para = document.createElement('div')
+          para.innerHTML = bbb
+          let value = para.querySelectorAll('p, h1, h2, h3, h4, h5, h6, li, pre, blockquote, hr, table')
+          console.log(value.length)
+//          const lineHeight = this.editor.renderer.lineHeight
+//          const height = this.editSession.getScreenLength() * lineHeight - clientHeight
+//          const ratio = parseFloat(scrollTop) / height
+          this.actionSaveScrollRatio(value.length)
+        })
       },
       // undo 和redo
       redo () {
@@ -276,7 +325,6 @@
       // 这个是当元素在目标上面的时候
       handleDragover: function (event) {
         event.preventDefault()
-        console.log('aslkdfj aksdfj k')
       },
       // 这个是元素在目标上面鼠标离开的时候
       handleDragleave (e) {
@@ -286,7 +334,6 @@
       imgPaste: function (event) {
         console.log(event)
         if (!imgPaste.isImage(event.clipboardData.items)) {
-          console.log('这不是图片复制')
         } else {
           this.isLoading = true
           const promise = new Promise(function (resolve, reject) {
@@ -300,8 +347,6 @@
             })
           })
           promise.then((data) => {
-            console.log('成功了editor')
-            console.log(data.url)
             const addurl = '![' + data.name + '](' + data.url + ')'
             this.editor.setValue(this.editor.getValue() + addurl)
             this.isLoading = false
@@ -314,8 +359,6 @@
       },
       editAndSaveTitle: debounce(function (editedValue) {
         // 一份是保存leancloud，一份是保存本地
-        console.log(editedValue)
-        console.log(this.getCurrentNewArticle.id)
         const titleData = {
           articleid: this.getCurrentNewArticle.id,
           articletitle: editedValue

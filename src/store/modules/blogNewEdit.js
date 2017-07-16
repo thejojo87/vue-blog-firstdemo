@@ -6,28 +6,47 @@ import * as blogNewEdit from '@/service/blogNewEdit'
 const types = {
   SAVE_CURRENT_EDIT_TITLE: 'blogNewEdit/SAVE_CURRENT_EDIT_TITLE',
   SAVE_CURRENT_EDIT_CONTENT: 'blogNewEdit/SAVE_CURRENT_EDIT_CONTENT',
+  SAVE_CURRENT_EDIT_CONTENT_PREVIEW: 'blogNewEdit/SAVE_CURRENT_EDIT_CONTENT_PREVIEW',
   SAVE_PREVIEW_MODE: 'blogNewEdit/SAVE_PREVIEW_MODE',
-  SAVE_ISBACK_FROM_VIEW_MODE: 'blogNewEdit/SAVE_ISBACK_FROM_VIEW_MODE'
+  SAVE_ISBACK_FROM_VIEW_MODE: 'blogNewEdit/SAVE_ISBACK_FROM_VIEW_MODE',
+  SAVE_CURRENT_EDIT_CONTENT_SCROLLRATIO: 'blogNewEdit/SAVE_CURRENT_EDIT_CONTENT_SCROLLRATIO',
+  SAVE_CURRENT_EDIT_PREVIEW_SCROLLRATIO: 'blogNewEdit/SAVE_CURRENT_EDIT_PREVIEW_SCROLLRATIO'
   // SAVE_CURRENT_USER: 'login/SAVE_CURRENT_USER',
   // INIT_CURRENT_USER: 'login/INIT_CURRENT_USER'
 }
 const state = {
   isPreview: false,
-  isBackFromViewMode: false
+  isBackFromViewMode: false,
+  markdown: '',
+  scrollRatio: 0,
+  previewScrollRatio: 0
   // currentUser: ''
 }
 const getters = {
+  getScrollRatio: state => state.scrollRatio,
+  getPreviewScrollRatio: state => state.previewScrollRatio,
   getIsPreview: state => state.isPreview,
+  getMarkdown: state => state.markdown,
   getIsBackFromViewMode: state => state.isBackFromViewMode
 }
 
 // actions
 const actions = {
+  actionSavePreviewScrollRatio ({ commit }, ratio) {
+    commit(types.SAVE_CURRENT_EDIT_PREVIEW_SCROLLRATIO, ratio)
+  },
+  actionSaveScrollRatio ({ commit }, ratio) {
+    commit(types.SAVE_CURRENT_EDIT_CONTENT_SCROLLRATIO, ratio)
+  },
   actionSavePreviewMode ({ commit }, isPreviewMode) {
     commit(types.SAVE_PREVIEW_MODE, isPreviewMode)
   },
   actionSaveIsBackFromViewMode ({ commit }, isBackFromViewMode) {
     commit(types.SAVE_ISBACK_FROM_VIEW_MODE, isBackFromViewMode)
+  },
+  // 保存markdown
+  actionSaveCurrentEditContentPreview ({ commit }, markdown) {
+    commit(types.SAVE_CURRENT_EDIT_CONTENT_PREVIEW, markdown)
   },
   // 保存正在编辑的文章内容
   actionSaveCurrentEditContent ({ commit, rootState }, contentdata) {
@@ -84,8 +103,17 @@ const actions = {
 
 // mutations
 const mutations = {
+  [types.SAVE_CURRENT_EDIT_PREVIEW_SCROLLRATIO] (state, ratio) {
+    state.previewScrollRatio = ratio
+  },
+  [types.SAVE_CURRENT_EDIT_CONTENT_SCROLLRATIO] (state, ratio) {
+    state.scrollRatio = ratio
+  },
   [types.SAVE_PREVIEW_MODE] (state, isPreviewMode) {
     state.isPreview = isPreviewMode
+  },
+  [types.SAVE_CURRENT_EDIT_CONTENT_PREVIEW] (state, markdown) {
+    state.markdown = markdown
   },
   [types.SAVE_ISBACK_FROM_VIEW_MODE] (state, isBackFromViewMode) {
     state.isBackFromViewMode = isBackFromViewMode
