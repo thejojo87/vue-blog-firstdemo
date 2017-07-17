@@ -100,7 +100,7 @@
   .blog_content
     /*display: flex*/
     flex: 1
-    /*width: 700px*/
+    width: 700px
     /*min-height: 800px*/
     font-family: Lato,"Microsoft Jhenghei","Hiragino Sans GB","Microsoft YaHei",sans-serif
     font-size: 14px
