@@ -1,9 +1,9 @@
 <template>
 <div id="newEditPreview">
-  <div id="newEditPreviewEdit">
+  <div id="newEditPreviewEdit" v-bind:class="{ newEditPreviewEditExpand: getIsExpandEditor }" >
     <new-edit-bar></new-edit-bar>
   </div>
-  <div id="newEditPreviewView" ref="preview" >
+  <div id="newEditPreviewView" v-bind:class="{ newEditPreviewViewExpand: getIsExpandEditor }" ref="preview" >
     <new-edit-bar-preview></new-edit-bar-preview>
   </div>
 </div>
@@ -32,28 +32,26 @@
     watch: {
       // 这是用来当editorscroll的时候同步scrollpreview的
       getScrollRatio: function (val, oldVal) {
-        //  插入图片之后高度计算怎么都不对劲
         console.log('new: %s, old: %s', val, oldVal)
         console.log(val)
-//        // 不知道是什么
-//        console.log(this.$refs.preview.scrollHeight)
-//        // 可见高度
-//        console.log(this.$refs.preview.clientHeight)
-//        // 滚动的长度
-//        console.log(this.$refs.preview.scrollTop)
         let elems = this.$refs.preview.querySelectorAll('p, h1, h2, h3, h4, h5, h6, li, pre, blockquote, hr, table')
         if (elems.length > 0) {
           this.$refs.preview.scrollTop = elems[elems.length - val].offsetTop
         }
-//        const calScrollTop = (this.$refs.preview.scrollHeight - this.$refs.preview.clientHeight) * val
-//        console.log(calScrollTop)
-//        this.$refs.preview.scrollTop = calScrollTop
-//        console.log(this.$refs.preview.scrollTop)
+      },
+      getIsExpandEditor: function (val, oldVal) {
+        console.log('new: %s, old: %s', val, oldVal)
+        if (val) {
+          console.log('true')
+        } else {
+          console.log('false')
+        }
       }
     },
     computed: {
       ...mapGetters({
-        getScrollRatio: 'getScrollRatio'
+        getScrollRatio: 'getScrollRatio',
+        getIsExpandEditor: 'getIsExpandEditor'
       })
     },
     methods: {
@@ -94,5 +92,11 @@
     font-size: 16px;
     font-weight: normal;
     line-height: 25px;
+  }
+  .newEditPreviewEditExpand {
+    width: 99% !important;
+  }
+  .newEditPreviewViewExpand {
+    display: none;
   }
 </style>

@@ -35,6 +35,11 @@
               <Icon type="ios-book" size="20"/>
         </div>
       </Tooltip>
+      <Tooltip content="全屏编辑" placement="top" v-if="getIsPreview">
+        <div class="toolbarImage" v-on:click="expandEditor">
+          <Icon type="arrow-expand" size="20"/>
+        </div>
+      </Tooltip>
     </div>
 
     <div id="newEditMainbar"
@@ -74,6 +79,7 @@
     name: 'NewEditBar',
     data () {
       return {
+//        isExpandEditor: false,
         isDragHasImage: false,
         text: '',
         images: [],
@@ -124,13 +130,23 @@
 //        if (scrollTop > 0) {
 //          this.editSession.setScrollTop(scrollTop)
 //        }
+      },
+      getIsExpandEditor: function (val, oldVal) {
+        console.log('new: %s, old: %s', val, oldVal)
+        if (val) {
+          console.log('true')
+        } else {
+          console.log('false')
+        }
+        this.editor.resize()
       }
     },
     computed: {
       ...mapGetters({
         getCurrentNewArticle: 'getCurrentNewArticle',
         getIsPreview: 'getIsPreview',
-        getPreviewScrollRatio: 'getPreviewScrollRatio'
+        getPreviewScrollRatio: 'getPreviewScrollRatio',
+        getIsExpandEditor: 'getIsExpandEditor'
       })
     },
     methods: {
@@ -140,8 +156,13 @@
         'actionSavePreviewMode',
         'actionSaveIsBackFromViewMode',
         'actionSaveCurrentEditContentPreview',
-        'actionSaveScrollRatio'
+        'actionSaveScrollRatio',
+        'actionSaveEditorExpandMode'
       ]),
+      // 编辑器全屏模式
+      expandEditor () {
+        this.actionSaveEditorExpandMode(!this.getIsExpandEditor)
+      },
       // 设置表示进入preview模式
       savePreviewMode (isPreviewMode) {
         this.actionSavePreviewMode(isPreviewMode)
@@ -262,6 +283,10 @@
           this.actionSaveScrollRatio(value.length)
         })
       },
+      _moveCursor (row, column) {
+        this.editor.moveCursorTo(row, column)
+        this.editor.focus()
+      },
       // undo 和redo
       redo () {
         if (this.undoManager.hasRedo()) {
@@ -301,16 +326,25 @@
           })
           promise.then((data) => {
             console.log('成功了上传批量图片')
+            let urltoinsert = ''
             for (var i = 0; i < data.length; i++) {
-              console.log(data[i].attributes.images.attributes.url)
-              console.log(data[i].attributes.images.attributes.name)
               const addurl = '![' + data[i].attributes.images.attributes.name + '](' + data[i].attributes.images.attributes.url + ')' + '\n'
-//            this.text += addurl
-              console.log(this.editor.getValue())
-              this.editor.setValue(this.editor.getValue() + addurl)
-//          this.text += addurl
+              urltoinsert += addurl
+//              this.editor.setValue(this.editor.getValue() + addurl)
             }
-            this.editor.clearSelection()
+            console.log(urltoinsert)
+            const selection = this.selection
+            if (!selection.isEmpty()) {
+              const range = selection.getRange()
+              this.editSession.replace(range, urltoinsert)
+              const { row, column } = selection.getSelectionAnchor()
+              selection.clearSelection()
+              this._moveCursor(row + 1, column)
+              this.isLoading = false
+              return
+            }
+            this.editor.insert(urltoinsert)
+            this.editor.focus()
             this.isLoading = false
           }, (error) => {
             console.log(error)
@@ -348,9 +382,20 @@
           })
           promise.then((data) => {
             const addurl = '![' + data.name + '](' + data.url + ')'
-            this.editor.setValue(this.editor.getValue() + addurl)
+            console.log(addurl)
+            const selection = this.selection
+            if (!selection.isEmpty()) {
+              const range = selection.getRange()
+              this.editSession.replace(range, addurl)
+              const { row, column } = selection.getSelectionAnchor()
+              selection.clearSelection()
+              this._moveCursor(row + 1, column)
+              this.isLoading = false
+              return
+            }
+            this.editor.insert(addurl)
+            this.editor.focus()
             this.isLoading = false
-            this.editor.clearSelection()
           }, function (error) {
             console.log(error)
             console.log('出了什么错误')

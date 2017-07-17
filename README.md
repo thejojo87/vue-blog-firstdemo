@@ -1988,13 +1988,47 @@ getLines()
 2017-07-17 05:57:22
 
 - Todo:
-
-- [ ] 写作模式-全屏
+- [ ] 同步到evernote
+- [ ] ace编辑器的css换成马克飞象的
+- [ ] 本地文件读取存储
+- [x] 写作模式-全屏
 - [ ] 编辑栏全部
 - [ ] 沉浸式阅读
-- [ ] 图片插入应该在指定的位置，而不是尾部-insert才对吧
+- [x] 图片插入应该在指定的位置，而不是尾部-insert才对吧
 - [ ] highlight.js 代码高亮
 
 - 思路
 
 写作的全屏模式还是需要的。
+思路是先给toolbar一个按钮。
+然后默认为false的store里一个bool变量。
+按下按钮就切换true，false
+应该要设置css切换。我当然知道操作css函数。但是有没有优雅的办法？
+能不能这么做？
+设置两套css，用class绑定的方式？
+就是这个方式了。
+
+```javascript
+v-bind:class="{ newEditPreviewViewExpand: getIsExpandEditor }"
+```
+
+如果为真，那么就获取这个class，这里只是一个，display:none罢了。
+
+但是发现了一个bug。
+当点击全屏的时候编辑器并没有随着增大。
+只有重新载入才可以。
+我发现了一个reseize方法。
+用来刷新。
+https://github.com/josdejong/jsoneditor/issues/131
+
+
+
+沉浸式阅读该怎么做呢？
+对我来说其实并没有这样的需求。
+
+
+先做图片插入吧
+图片插入很简单，分为两个情况。
+一个是有没有selection，如果有的话，取代selection
+如果没有selection，直接insert然后focus就可以了。
+

@@ -8,6 +8,7 @@ const types = {
   SAVE_CURRENT_EDIT_CONTENT: 'blogNewEdit/SAVE_CURRENT_EDIT_CONTENT',
   SAVE_CURRENT_EDIT_CONTENT_PREVIEW: 'blogNewEdit/SAVE_CURRENT_EDIT_CONTENT_PREVIEW',
   SAVE_PREVIEW_MODE: 'blogNewEdit/SAVE_PREVIEW_MODE',
+  SAVE_EDITOR_EXPAND_MODE: 'blogNewEdit/SAVE_EDITOR_EXPAND_MODE',
   SAVE_ISBACK_FROM_VIEW_MODE: 'blogNewEdit/SAVE_ISBACK_FROM_VIEW_MODE',
   SAVE_CURRENT_EDIT_CONTENT_SCROLLRATIO: 'blogNewEdit/SAVE_CURRENT_EDIT_CONTENT_SCROLLRATIO',
   SAVE_CURRENT_EDIT_PREVIEW_SCROLLRATIO: 'blogNewEdit/SAVE_CURRENT_EDIT_PREVIEW_SCROLLRATIO'
@@ -16,6 +17,7 @@ const types = {
 }
 const state = {
   isPreview: false,
+  isExpandEditor: false,
   isBackFromViewMode: false,
   markdown: '',
   scrollRatio: 0,
@@ -26,6 +28,7 @@ const getters = {
   getScrollRatio: state => state.scrollRatio,
   getPreviewScrollRatio: state => state.previewScrollRatio,
   getIsPreview: state => state.isPreview,
+  getIsExpandEditor: state => state.isExpandEditor,
   getMarkdown: state => state.markdown,
   getIsBackFromViewMode: state => state.isBackFromViewMode
 }
@@ -40,6 +43,9 @@ const actions = {
   },
   actionSavePreviewMode ({ commit }, isPreviewMode) {
     commit(types.SAVE_PREVIEW_MODE, isPreviewMode)
+  },
+  actionSaveEditorExpandMode ({ commit }, isExpandEditor) {
+    commit(types.SAVE_EDITOR_EXPAND_MODE, isExpandEditor)
   },
   actionSaveIsBackFromViewMode ({ commit }, isBackFromViewMode) {
     commit(types.SAVE_ISBACK_FROM_VIEW_MODE, isBackFromViewMode)
@@ -111,6 +117,9 @@ const mutations = {
   },
   [types.SAVE_PREVIEW_MODE] (state, isPreviewMode) {
     state.isPreview = isPreviewMode
+  },
+  [types.SAVE_EDITOR_EXPAND_MODE] (state, isExpandEditor) {
+    state.isExpandEditor = isExpandEditor
   },
   [types.SAVE_CURRENT_EDIT_CONTENT_PREVIEW] (state, markdown) {
     state.markdown = markdown
