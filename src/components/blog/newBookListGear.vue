@@ -61,8 +61,8 @@
     },
     watch: {
       getCurrentBook: function (val, oldVal) {
-        console.log('new: %s, old: %s', val, oldVal)
-        console.log(val)
+//        console.log('new: %s, old: %s', val, oldVal)
+//        console.log(val)
         this._bookname = val.attributes.title
       }
     },

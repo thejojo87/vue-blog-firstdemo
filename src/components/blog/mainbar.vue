@@ -11,7 +11,7 @@
           <a v-if="article.attributes.tags"><el-tag type="primary">{{article.attributes.tags}}</el-tag></a>
         </div>
         <div class="content">
-          <div>{{  article.attributes.content  }}</div>
+          <div v-html="changeMarkdownStyle(article.attributes.content)"></div>
         </div>
         <div id="read">
           <a @click="goDetail(article)">阅读全文</a>
@@ -29,13 +29,14 @@
 <script>
   import { mapGetters, mapActions } from 'vuex'
   import * as service from '@/service/articles'
+  import markdown from '@/ext/markdown'
   export default {
     name: 'mainbar',
     data () {
       return {
         articles: [],
         currentPage: 1,
-        pageSize: 2,
+        pageSize: 8,
         displayArticles: []
       }
     },
@@ -47,12 +48,8 @@
     },
     watch: {
       getArticles: function (val, oldVal) {
-        console.log('new: %s, old: %s', val, oldVal)
-        console.log('blog里article变化了' + val)
-        console.log(val)
         this.articles = val
         this.displayArticles = service.getDisplayArticles(this.articles, this.currentPage, this.pageSize)
-//        this.actionGetArticles(val.id)
       }
     },
     computed: {
@@ -68,19 +65,19 @@
         'actionSaveCurrentPage',
         'actionSaveCurrentArticle'
       ]),
+      // 转换成markdown格式
+      changeMarkdownStyle (article) {
+        return markdown.render(article)
+      },
       // 跳转到详情页
       goDetail (article) {
-        console.log(article)
         const url = '/blog/articles/' + article.id
-        console.log(url)
         this.actionSaveCurrentArticle(article)
         this.$router.push(url)
       },
       // 跳转到新建文章界面
       goNewArticle () {
         const url = '/blog/new/'
-//        console.log(url)
-//        this.actionSaveCurrentArticle(article)
         this.$router.push(url)
       },
       // 当前页改变了

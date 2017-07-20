@@ -5,7 +5,7 @@
         <div @click="chooseArticle(index, article)" class="new_article_list_item">
         <div class="new_article_list_item_icon">
           <Icon  id="new_article_icon" color="#a6a6a6"  size="35" type="document-text" />
-            <span id="wordnumber">字数:2100999</span>
+            <span id="wordnumber">字数:{{  article.attributes.content.length }}</span>
         </div>
         <div class="new_article_list_item_main">
           <p id="new_article_list_item_title">{{  article.attributes.title  }}</p>
@@ -39,13 +39,12 @@
     watch: {
       // 这里要当变化的时候，current——article也要存进去
       getCurrentBookArticles: function (val, oldVal) {
+        console.log('bookarticles变化了')
         console.log(this.isInit)
         // 如果是删除了最后一个元素，那么index是不会变化的。
         if (this.getCurrentBookArticles[0]) {
-          console.log('aaa')
-          this.actionSaveCurrentBookArticle(this.getCurrentBookArticles[0])
+          this.actionSaveCurrentBookArticle(this.getCurrentBookArticles[this.getCurrentArticleIndex])
         } else {
-          console.log('bbb')
           this.actionSaveCurrentBookArticle()
         }
       }

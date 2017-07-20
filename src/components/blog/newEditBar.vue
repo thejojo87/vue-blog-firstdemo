@@ -3,6 +3,7 @@
   <div  id="newEditor" v-if="getCurrentNewArticle">
     <div id="newEditBarTitle">
       <input
+        v-if="getCurrentNewArticle.attributes.title"
         @input="editAndSaveTitle($event.target.value)"
         class="note_name mousetrap" name="note_name" type="text" id="note_title" :value="getCurrentNewArticle.attributes.title" >
     </div>
@@ -97,39 +98,57 @@
     },
     created: function () {
       console.log('created editor')
-//      this.$nextTick(() => {
-//        this.createEditor()
-//        this.initEditor()
-//      })
+      this.$nextTick(() => {
+        this.createEditor()
+        this.initEditor()
+      })
     },
     mounted: function () {
       console.log('created editor mounted')
       console.log(window)
-      this.createEditor()
-      this.initEditor()
+//      this.createEditor()
+//      this.initEditor()
     },
     updated () {
-      console.log('created editor updated')
-      if (this.editor === null) {
+      console.log(this.editor === null)
+      console.log(this.editor)
+      this.$nextTick(() => {
         this.createEditor()
         this.initEditor()
-      }
+//        if (this.getIsPreview) {
+        this.actionSaveIsEditorMode(false)
+//        }
+//        this.actionSaveIsEditorMode()
+      })
+      // 为什么要加这个判断？
+//      if (this.editor === null) {
+//        this.createEditor()
+//        this.initEditor()
+//      }
     },
     watch: {
       getCurrentNewArticle: function (val, oldVal) {
-        this.createEditor()
-        this.initEditor()
+        this.actionSaveIsChangeBookArticle(true)
+        if (val) {
+          console.log('newArticle为null')
+          console.log(val)
+          this.editor = null
+          this.editSession = null
+          this.undoManager = null
+          this.selection = null
+        } else {
+          console.log(val)
+        }
+        this.$nextTick(() => {
+//          this.createEditor()
+//          this.initEditor()
+          console.log('newarticleasdl,;kfkjalkjasdjf laksdfj lkajd sf;klasdfj ')
+        })
         // 既然book变了，article变了，那么就应该改变当前的article才对。
       },
       // 当preview的scroll变化，editor也要同步变化
-      getPreviewScrollRatio: function (val, oldVal) {
-        // Todo: 高度计算好像有点不对劲，还有保留两者不同步或许也蛮好
-//        const clientHeight = document.querySelector('.ace_scroller').clientHeight
-//        const lineHeight = this.editor.renderer.lineHeight
-//        const scrollTop = (this.editSession.getScreenLength() * lineHeight - clientHeight) * val
-//        if (scrollTop > 0) {
-//          this.editSession.setScrollTop(scrollTop)
-//        }
+      getIsPreview: function (val, oldVal) {
+        console.log(val)
       },
       getIsExpandEditor: function (val, oldVal) {
         console.log('new: %s, old: %s', val, oldVal)
@@ -146,7 +165,9 @@
         getCurrentNewArticle: 'getCurrentNewArticle',
         getIsPreview: 'getIsPreview',
         getPreviewScrollRatio: 'getPreviewScrollRatio',
-        getIsExpandEditor: 'getIsExpandEditor'
+        getIsExpandEditor: 'getIsExpandEditor',
+        getIsChangeBookArticle: 'getIsChangeBookArticle',
+        getIsEditorMode: 'getIsEditorMode'
       })
     },
     methods: {
@@ -157,7 +178,9 @@
         'actionSaveIsBackFromViewMode',
         'actionSaveCurrentEditContentPreview',
         'actionSaveScrollRatio',
-        'actionSaveEditorExpandMode'
+        'actionSaveEditorExpandMode',
+        'actionSaveIsChangeBookArticle',
+        'actionSaveIsEditorMode'
       ]),
       // 编辑器全屏模式
       expandEditor () {
@@ -166,6 +189,11 @@
       // 设置表示进入preview模式
       savePreviewMode (isPreviewMode) {
         this.actionSavePreviewMode(isPreviewMode)
+        if (isPreviewMode) {
+          this.actionSaveIsEditorMode(isPreviewMode)
+        } else {
+          this.actionSaveIsEditorMode(!isPreviewMode)
+        }
         const router = this.$router
         if (!isPreviewMode) {
           router.push({ name: 'BlogNew' })
@@ -177,10 +205,13 @@
       },
       // 设置编辑器拖拽
       initEditor () {
+        console.log('editor初始化了')
 //        this.editor.session.setValue()
 //        this.editSession.setValue()
+        // 这里要不要加个判断？
         this.editor.getSession().setValue(this.getCurrentNewArticle.attributes.content)
         this.editor.clearSelection()
+        this.editorEvent()
         const drag = document.getElementById('newEditMainbar')
         drag.ondragover = function (e) {
           e.preventDefault()
@@ -194,9 +225,11 @@
        * create markdown editor
        */
       createEditor () {
+        console.log('新建一个editor')
         this.editor = window.ace.edit('newEditMainbar')
         this.editor.setTheme('ace/theme/chrome')
         this.editSession = this.editor.getSession()
+//        this.editSession.reset()
         this.editSession.setMode('ace/mode/markdown')
         this.selection = this.editSession.getSelection()
         this.undoManager = this.editSession.getUndoManager()
@@ -211,8 +244,9 @@
 //        this.editor.setShowFoldWidgets(false)
         // 自动换行
         this.editSession.setUseWrapMode(true)
+        // insert content
+//        this.editSession.setValue(this.getCurrentNewArticle.attributes.content)
 //        this.editor.setShowFoldWidgets(false)
-//
 //        // custom markdown renderer anchor
 //        this.markdownAnchor()
 //
@@ -220,27 +254,27 @@
 //        this.markdownInline()
 //
         // editor event
-        this.editorEvent()
+//        this.editorEvent()
 //
         // editor keybindings
         this.editor.setKeyboardHandler('ace/keyboard/vim')
 //        this.editorKeybindings()
-//
-//        // insert content
-//        this.editSession.setValue(content)
-//
-//        this.editor.focus()
+        this.editor.focus()
       },
       /*
        * listen editor event
        */
       editorEvent () {
+        if (this.editSession.getValue() === this.getCurrentNewArticle.attributes.content) {
+          this.actionSaveIsChangeBookArticle(false)
+        }
         // listen editor 'change' event and render markdown
         // 保存本地，并且传送到leancloud，修改articles数据，并且保存。
         this.editSession.on('change', () => {
-          const content = this.editSession.getValue()
+          let content = this.editSession.getValue()
           // 这个判断的目的是当切换article的时候别无谓的保存。
-          if (content !== this.getCurrentNewArticle.attributes.content) {
+          if (!this.getIsEditorMode && content !== this.getCurrentNewArticle.attributes.content && !this.getIsChangeBookArticle) {
+            console.log('editor 要上传了')
             const contentData = {
               articleid: this.getCurrentNewArticle.id,
               articlecontent: content
@@ -249,7 +283,14 @@
             }), 300)
           }
           // 这里要做的是，渲染，并且保存到store里
-          const markdownPreview = markdown.render(content)
+          console.log(content)
+//          content = '# ' + this.getCurrentNewArticle.attributes.title + '<br>' + '<br>' + '<br>' + '<br>' + content
+          console.log(typeof content)
+          let markdownPreview = markdown.render(content)
+          console.log(typeof markdownPreview)
+          console.log(markdownPreview)
+          const title = '<h1>' + this.getCurrentNewArticle.attributes.title + '</h1>' + '<br>'
+          markdownPreview = title + markdownPreview
           this.actionSaveCurrentEditContentPreview(markdownPreview)
         })
         // 当editbarscroll的时候，同步滑动preview

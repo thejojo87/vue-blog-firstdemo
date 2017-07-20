@@ -11,20 +11,22 @@ const types = {
   SAVE_EDITOR_EXPAND_MODE: 'blogNewEdit/SAVE_EDITOR_EXPAND_MODE',
   SAVE_ISBACK_FROM_VIEW_MODE: 'blogNewEdit/SAVE_ISBACK_FROM_VIEW_MODE',
   SAVE_CURRENT_EDIT_CONTENT_SCROLLRATIO: 'blogNewEdit/SAVE_CURRENT_EDIT_CONTENT_SCROLLRATIO',
-  SAVE_CURRENT_EDIT_PREVIEW_SCROLLRATIO: 'blogNewEdit/SAVE_CURRENT_EDIT_PREVIEW_SCROLLRATIO'
-  // SAVE_CURRENT_USER: 'login/SAVE_CURRENT_USER',
+  SAVE_CURRENT_EDIT_PREVIEW_SCROLLRATIO: 'blogNewEdit/SAVE_CURRENT_EDIT_PREVIEW_SCROLLRATIO',
+  SAVE_IS_EDITOR_MODE: 'blogNewEdit/SAVE_IS_EDITOR_MODE'
   // INIT_CURRENT_USER: 'login/INIT_CURRENT_USER'
 }
 const state = {
   isPreview: false,
   isExpandEditor: false,
   isBackFromViewMode: false,
+  isEditorMode: false,
   markdown: '',
   scrollRatio: 0,
   previewScrollRatio: 0
   // currentUser: ''
 }
 const getters = {
+  getIsEditorMode: state => state.isEditorMode,
   getScrollRatio: state => state.scrollRatio,
   getPreviewScrollRatio: state => state.previewScrollRatio,
   getIsPreview: state => state.isPreview,
@@ -40,6 +42,9 @@ const actions = {
   },
   actionSaveScrollRatio ({ commit }, ratio) {
     commit(types.SAVE_CURRENT_EDIT_CONTENT_SCROLLRATIO, ratio)
+  },
+  actionSaveIsEditorMode ({ commit }, isEditorMode) {
+    commit(types.SAVE_IS_EDITOR_MODE, isEditorMode)
   },
   actionSavePreviewMode ({ commit }, isPreviewMode) {
     commit(types.SAVE_PREVIEW_MODE, isPreviewMode)
@@ -114,6 +119,10 @@ const mutations = {
   },
   [types.SAVE_CURRENT_EDIT_CONTENT_SCROLLRATIO] (state, ratio) {
     state.scrollRatio = ratio
+  },
+  // 这个是为了进入编辑器双栏模式的时候，同步editor的输入的时候总是会引发数据上传
+  [types.SAVE_IS_EDITOR_MODE] (state, isEditorMode) {
+    state.isEditorMode = isEditorMode
   },
   [types.SAVE_PREVIEW_MODE] (state, isPreviewMode) {
     state.isPreview = isPreviewMode

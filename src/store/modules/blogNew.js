@@ -1,3 +1,4 @@
+/* eslint-disable no-unexpected-multiline */
 /**
  * Created by thejojo on 2017/6/26.
  */
@@ -11,25 +12,39 @@ const types = {
   SAVE_CURRENT_BOOK: 'blog/SAVE_CURRENT_BOOK',
   SAVE_CURRENT_BOOKINDEX: 'blog/SAVE_CURRENT_BOOKINDEX',
   DELETE_BOOK: 'blog/DELETE_BOOK',
-  SAVE_CURRENT_BOOK_ARTICLES: 'blog/SAVE_CURRENT_BOOK_ARTICLES'
+  SAVE_CURRENT_BOOK_ARTICLES: 'blog/SAVE_CURRENT_BOOK_ARTICLES',
+  SAVE_CHANGE_BOOKS_INDEX: 'blog/SAVE_CHANGE_BOOKS_INDEX',
+  SAVE_IS_CHANGE_BOOK_ARTICLE: 'blog/SAVE_IS_CHANGE_BOOK_ARTICLE'
   // INIT_CURRENT_USER: 'login/INIT_CURRENT_USER'
 }
 const state = {
   books: [],
   currentBook: [],
   current_book_articles: [],
-  current_book_index: 0
+  current_book_index: 0,
+  isChangeBookArticle: false
   // currentUser: ''
 }
 // getters login需要处理的是登陆的用户id什么的，leancloud返回的资料
 const getters = {
   getBooks: state => state.books,
+  getIsChangeBookArticle: state => state.isChangeBookArticle,
+  // getSortedBooks: state => {
+  //   return state.books.sort((a, b) => a.attributes.sort - b.attributes.sort)
+  // },
   getCurrentBook: state => state.currentBook,
   getCurrentBookArticles: state => state.current_book_articles,
   getCurrentBookIndex: state => state.current_book_index
 }
 // actions
 const actions = {
+  actionSaveIsChangeBookArticle ({ commit }, isChange) {
+    commit(types.SAVE_IS_CHANGE_BOOK_ARTICLE, isChange)
+  },
+  // 更换两者的sort值，然后更换leancloud的
+  actionSaveChangeBooksIndex ({ commit }, bookindexdata) {
+    commit(types.SAVE_CHANGE_BOOKS_INDEX, bookindexdata)
+  },
   // 删除book
   actionDeleteBook ({ commit, rootState }, bookdata) {
     const promise = new Promise(function (resolve, reject) {
@@ -176,6 +191,49 @@ const mutations = {
   },
   [types.CHANGE_BOOKNAME] (state, newbookname) {
     state.currentBook.attributes.title = newbookname.bookname
+  },
+  [types.SAVE_IS_CHANGE_BOOK_ARTICLE] (state, isChange) {
+    state.isChangeBookArticle = isChange
+  },
+  [types.SAVE_CHANGE_BOOKS_INDEX] (state, indexs) {
+    // 在这里遇到个问题，就是会出现警告说不能再mutation以外操作
+    // 原因可能是需要deepcopy，又或者是因为draggable的问题？
+    // 太奇怪了吧，为什么变其他的属性如title就没问题，但是变这个属性就出错？
+    // 发现还是sort的问题
+    console.log('8888888888888888888')
+    console.log('8888888888888888888')
+    console.log('8888888888888888888')
+    console.log('8888888888888888888')
+    console.log('8888888888888888888')
+    console.log('8888888888888888888')
+    console.log('8888888888888888888')
+    console.log('8888888888888888888')
+    console.log('8888888888888888888')
+    console.log('8888888888888888888')
+    console.log('8888888888888888888')
+    let indexnum = state.books[indexs.oldIndex].attributes.sort
+    state.books[indexs.oldIndex].attributes.sort = state.books[indexs.newIndex].attributes.sort
+    state.books[indexs.newIndex].attributes.sort = indexnum
+    var tmp = state.books[indexs.oldIndex]
+    state.books[indexs.oldIndex] = state.books[indexs.newIndex]
+    state.books[indexs.newIndex] = tmp
+    console.log(tmp)
+    console.log(tmp)
+    console.log(tmp)
+    console.log(tmp)
+    console.log(tmp)
+    // let arr = state.books
+    // let x
+    // let y
+    // if (indexs.oldIndex < indexs.newIndex) {
+    //   x = indexs.oldIndex
+    //   y = indexs.newIndex
+    // } else {
+    //   y = indexs.oldIndex
+    //   x = indexs.newIndex
+    // }
+    // arr.splice(x - 1, 1, ...arr.splice(y - 1, 1, arr[x - 1]))
+    // [state.books[indexs.newIndex], state.books[indexs.oldIndex]] = [state.books[indexs.oldwIndex], state.books[indexs.newIndex]]
   },
   [types.GET_BOOKS] (state, books) {
     state.books = books

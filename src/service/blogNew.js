@@ -81,9 +81,15 @@ export function getBooks (userid, callback) {
   query.equalTo('owner', ownerid)
   query.find().then((results) => {
     console.log('books数据下载完毕')
+    console.log(results)
+    results = sortBooks(results)
     callback(results, 'success')
   }, function (error) {
     console.log(error)
     callback(error, 'error')
   })
+}
+
+export function sortBooks (books) {
+  return books.sort((a, b) => a.attributes.sort - b.attributes.sort)
 }

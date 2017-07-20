@@ -469,7 +469,7 @@ logout之后要清空state
       console.log('aaa')
       console.log(aaa)
     })
-    
+
     export function deleteTimeline (callback) {
       const av = avinit()
       const query = new av.Query('ReadInfo')
@@ -1116,8 +1116,8 @@ Todo:
 同时更改newArticleList里面watch的getCurrentBookArticles
 
 
-2017-07-03 01:30:14 
-Todo: 
+2017-07-03 01:30:14
+Todo:
 
 - [x] 删除article
 - [x] 删除book
@@ -1276,7 +1276,7 @@ pointer下面只有3个属性，当中一个是objid
 
 2017-07-04 00:29:37
 
-Todo: 
+Todo:
 
 - [x] 编辑器的标题栏
 
@@ -1411,7 +1411,7 @@ http://www.cnblogs.com/djuny/p/5254626.html
 遇到一个问题：
 使用getAsFile 获取了文件。
 但是想要改名字的时候说
-Cannot assign to read only property 'name' of object '#<File>' 
+Cannot assign to read only property 'name' of object '#<File>'
 没找到合理办法。
 我在想要不上传的时候，重命名就好了吧。
 
@@ -1432,7 +1432,7 @@ mixin的方式，在js里，设置了插件。
 然后当事情遇到的时候，往父组件里发送通知。
 
 
-2017-07-07 18:59:26 
+2017-07-07 18:59:26
 
 - Todo
 
@@ -1446,7 +1446,7 @@ mixin的方式，在js里，设置了插件。
 而是在父亲div里，设置的。
 
 ```javascript
-        @drop="handleDrag"  
+        @drop="handleDrag"
         @dragover="handleDragover"
         @dragleave="handleDragleave"
 ```
@@ -1531,7 +1531,7 @@ keybinding文件写入。
 不过我没看明白，tooltip是干什么用的。
 
 
-2017-07-11 22:18:56 
+2017-07-11 22:18:56
 
 决定使用ace editor了。
 虽然单纯的 textarea 或许也可以。
@@ -2021,14 +2021,229 @@ v-bind:class="{ newEditPreviewViewExpand: getIsExpandEditor }"
 用来刷新。
 https://github.com/josdejong/jsoneditor/issues/131
 
-
-
 沉浸式阅读该怎么做呢？
 对我来说其实并没有这样的需求。
-
 
 先做图片插入吧
 图片插入很简单，分为两个情况。
 一个是有没有selection，如果有的话，取代selection
 如果没有selection，直接insert然后focus就可以了。
 
+2017-07-17 05:57:22
+
+- Todo:
+
+- [ ] 同步到evernote
+- [ ] ace编辑器的css换成马克飞象的
+- [ ] 本地文件读取存储，导出为pdf或者html
+- [ ] 编辑栏添加工具栏（）
+- [ ] 沉浸式阅读 （这个其实对我来说可有可无，做不做无所谓）
+- [ ] highlight.js 代码高亮
+- [x] 阅读文章的bug，显示并不是markdown格式
+- [x] 阅读文章里，超过页面，并不会显示
+- [x] 文章界面里需要一个返回按钮
+- [x] 写文章的时候
+- [ ] segmentFault的笔记插件做的相当不错，要不要我也做一个？
+- [ ] 改变笔记本和笔记的顺序-拖拽
+- [x] markdown预览里添加了标题
+- [x] 更新字数
+
+- 思路
+
+做起来发现问题实在太多了。
+首先发现的是，阅读文章界面并不是markdown形式。
+好吧，其实就是v-html, markdown渲染就可以了。
+
+然后是文章，并不会自顶还行。
+好吧，word-break 和word-wrap
+
+照片太大，超过div宽度怎么办？
+一开始找到max-width，但是不知道为什么不好用
+不知道为什么preview就自动更改了
+
+img有很多个选项。
+不知道为什么，我想设置img max-width ！important 不好用
+没办法，在bootstrap86行的img里修改了。
+
+
+##### 拖拽改变book和article的顺序
+
+或许可以使用SortableJS库
+已经有很好的封装了
+https://github.com/SortableJS/Vue.Draggable
+
+需要获取books数据，并且按照当中排序来排序。
+我在想，或许不用在vuex里排序，直接在html界面排序可不可以？
+然后启动moved方法，更换index
+
+移动的时候如何防止打开网页呢？
+是我使用的拖拽产生问题的。
+将就一下吧。
+
+至于排序很简单,获取的结果经过处理就好了
+但是不光是在leancloud获取数据的时候会需要sort的。
+所以想来想去，还是在getter里，先sort了。
+这样的话，获取的books数据全都是经过排序的。
+
+```javascript
+export function sortBooks (books) {
+  return books.sort((a, b) => a.attributes.sort - b.attributes.sort)
+}
+```
+
+新建的时候，要增加一个sort字段，代表排序顺序。
+当拖动的callback的时候就交换顺序。
+
+遇到了问题了，我在获取getbooks的时候是用sort函数处理的。
+但是这就导致了修改
+
+我需要做的是，首先在vuex里交换数据。
+然后列表里排序渲染。
+我现在已经做到了在vuex里修改了sort值。
+但是如何表现排序后的列表呢？
+一个是getter里，返回？
+会不会是因为我使用另一个js脚本里交换了数据才导致出错的？
+
+另一个是在vue文件里sort？
+The reason is that arrays are stored as references in Javascript and payload.items is likely to be changed outside Vuex. So we should just use a fresh copy of payload.items instead.
+
+其实可以关掉strict 模式。
+或许可以用另一个方法来思考。
+获取数据的时候就按照sort来存取。
+交换的时候手动交换数组里的数据。
+虽然books里的数据更新结束。
+但是并不会v-for 并不会主动更新
+使用了计算属性。
+但是依然没有能解决警告的问题。
+但是无所谓了，因为computed这个属性只计算一次。
+消耗非常低。
+
+
+发现了一个大bug，
+当选择了一个空书，之后再返回有文章的界面。
+那么editor并没有初始化
+
+先解决从空书，返回的时候是启动update
+这个时候我加了个判断，isEditor null
+为什么加这个判断呢？
+因为如果取消了这个判断的话，每次切换文章的时候就会做空
+editor，而这个又引发了leancloud数据清空。
+
+
+2017-07-19 08:59:24
+
+- Todo:
+
+- [ ] 同步到evernote
+- [ ] ace编辑器的css换成马克飞象的
+- [ ] 本地文件读取存储，导出为pdf或者html
+- [ ] 编辑栏添加工具栏（）
+- [ ] 沉浸式阅读 （这个其实对我来说可有可无，做不做无所谓）
+- [ ] highlight.js 代码高亮
+- [ ] segmentFault的笔记插件做的相当不错，要不要我也做一个？
+
+- [x] 改变笔记本顺序
+- [ ] 改变笔记的顺序-拖拽
+- [ ] 笔记本和笔记切换的时候editor初始化有问题
+- [x] 一个bug，当回到首页又返回写文章界面的时候，book是上次那个，但是文章是第一个book的文章
+- 思路
+
+editor初始化总是出问题。
+到底应该怎么做呢？
+
+什么时候生成？
+刷新的时候？
+新载入的时候？
+
+改变内容怎么办？
+
+1. 首先我在created的时候
+使用了nextTrick
+发现在mounted完成之后，运行了完整的生命周期之后才进行的初始化。
+原来nextTrick有这样的妙用。
+那我之前写的promise写的获取数据什么的其实也该这么做不是吗？
+这个时候，新建了一个editor，一开始内容是空，
+赋值的时候给了currentArticle的数据，这个引发了on事件。
+editor变化了，但是并没有引发上传。
+因为这个值和 getCurrentNewArticle.attributes.content
+是一样的。
+
+
+2. 切换书的时候
+这个时候editor并不为null。
+
+但是因为切换了book，导致currentcontent为新的数据。
+但是editor因为使用了nextTrick
+editor初始化之后变成了空。
+这个和content不同，导致了上传事件的发生。
+
+如何才能判别切换文章导致的editor为空呢？
+
+为什么初始化的时候并不进行判定呢？
+
+currentArticle变化的时候把editor注销怎么样？
+貌似不可以
+要不直接写一个bool字段如何？
+就是这么解决的。
+新建一个bool变量。
+默认为false。
+当当前article变化的时候设置为true。
+然后上传的时候先查看这个shifou为true。
+只有false的时候才上传。
+最后添加editor event的时候，加一个判断。
+如果当前的编辑器value和当前的articlecontent
+
+3. 切换文章的时候和2 一样
+
+2017-07-20 18:06:37
+- Todo:
+
+- [ ] 同步到evernote
+- [ ] ace编辑器的css换成马克飞象的
+- [ ] 本地文件读取存储，导出为pdf或者html
+- [ ] 编辑栏添加工具栏（）
+- [ ] 沉浸式阅读 （这个其实对我来说可有可无，做不做无所谓）
+- [ ] highlight.js 代码高亮
+- [ ] segmentFault的笔记插件做的相当不错，要不要我也做一个？
+- [ ] 改变笔记的顺序-拖拽
+- [x] 笔记本和笔记切换的时候editor初始化有问题
+- [x] 一个bug，当从下面新建article的时候，当前article并没有变成这个article
+- [ ] article从下面新建之后并不显示在下面，是因为article按照新建顺序排列的，这个得等到写article顺序再考虑吧。
+
+- 思路
+
+又发现了一个bug，当从阅读模式返回的时候内容全部为0
+
+返回就是等于新的router，新的editor。
+并不是返回的时候出的问题，而是，去的时候启动了editor变化，导致上传的。
+然后返回错误结果。
+
+最后费尽心机解决了。
+思路就是发现editor，updated里nextTrick会在所有事件的最后会启动。
+设置一个bool变量。
+当进入preview 模式的时候，把这个设置为true
+编辑器里的上传条件是这个值为false。
+也就是当进入preview按钮的时候设置为true。
+然后进入编辑器里，之后设置为false。
+饭回来的时候也是一样的。
+饭回来的时候最后的nexttrick里设置为true
+
+这中间任何editor的赋值都不会引起上传。
+
+2017-07-21 02:18:09
+
+- 功能
+- [ ] 印象笔记api
+---
+
+- [ ] ace编辑器的css换成马克飞象的
+- [ ] 本地文件读取存储，导出为pdf或者html
+- [ ] 编辑栏添加工具栏（）
+- [ ] 沉浸式阅读 （这个其实对我来说可有可无，做不做无所谓）
+- [ ] highlight.js 代码高亮
+- [ ] segmentFault的笔记插件做的相当不错，要不要我也做一个？
+- [ ] 改变笔记的顺序-拖拽
+- bug
+- [ ] article从下面新建之后并不显示在下面，是因为article按照新建顺序排列的，这个得等到写article顺序再考虑吧。
+
+- 思路

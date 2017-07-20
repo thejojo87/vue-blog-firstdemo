@@ -1,7 +1,8 @@
 <template>
 <div class="new_book_list" >
   <ul class="list_display" >
-    <li class="book" :class="{book_active: index === getCurrentBookIndex}" v-for="(book, index) in getBooks">
+    <draggable v-model="sortbook" :move="moveBook" @change="changeBooks">
+    <li class="book" :class="{book_active: index === getCurrentBookIndex}" v-for="(book, index) in sortbook">
       <a @click="chooseBook(index, book)" data-type="active" class="notebook-name">
         <span>
           <div>{{  book.attributes.title  }}
@@ -12,6 +13,7 @@
         </div>
       </a>
     </li>
+    </draggable>
   </ul>
 </div>
 </template>
@@ -19,18 +21,24 @@
 <script>
   import { mapGetters, mapActions } from 'vuex'
   import NewBookListGear from './newBookListGear'
+  import draggable from 'vuedraggable'
+
   export default {
-    components: {NewBookListGear},
+    components: {
+      NewBookListGear,
+      draggable
+    },
     name: 'NewBookList',
     data () {
       return {
-//        activeIndex: this.getCurrentBookIndex
+        // 试一下这个变量代表排序后的结果
+        books: this.$store.state.books
+        //        activeIndex: this.getCurrentBookIndex
       }
     },
     created: function () {
       console.log('新建文章booklist被创造出来了')
-      console.log(this.activeIndex)
-      this.activeIndex = this.getCurrentBookIndex
+      this.actionSaveCurrentBookIndex(0)
     },
     watch: {
       getCurrentBook: function (val, oldVal) {
@@ -59,15 +67,45 @@
         getArticles: 'getArticles',
         getCurrentBook: 'getCurrentBook',
         getCurrentBookIndex: 'getCurrentBookIndex'
-      })
+      }),
+      sortbook: {
+        get () {
+          return this.sortBooks(this.$store.state.blogNew.books)
+        }
+//        return this.sortBooks(this.getBooks)
+      }
+//      sortbook: function () {
+//
+//      }
     },
     methods: {
       ...mapActions([
         'actionSaveCurrentBook',
         'actionSaveCurrentBookIndex',
         'actionSaveCurrentBookArticles',
-        'actionSaveCurrentBookArticleIndex'
+        'actionSaveCurrentBookArticleIndex',
+        'actionSaveChangeBooksIndex'
       ]),
+      moveBook (evt) {
+        console.log(evt)
+      },
+      sortBooks (books) {
+        return books.sort((a, b) => a.attributes.sort - b.attributes.sort)
+      },
+      changeBooks (evt) {
+//        evt.preventDefault()
+        console.log('change Books')
+        console.log(this.getBooks)
+        console.log(evt.moved)
+        console.log(evt.moved.newIndex)
+        console.log(evt.moved.oldIndex)
+        const index = {
+          newIndex: evt.moved.newIndex,
+          oldIndex: evt.moved.oldIndex
+        }
+        this.actionSaveChangeBooksIndex(index)
+        // 按照index，获取book，然后交换sort id
+      },
       chooseBook (index, book) {
 //        this.activeIndex = index
         this.actionSaveCurrentBook(book)

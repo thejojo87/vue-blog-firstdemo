@@ -29,6 +29,8 @@
     mounted: function () {
       this.addscrollwatching()
     },
+    updated: function () {
+    },
     watch: {
       // 这是用来当editorscroll的时候同步scrollpreview的
       getScrollRatio: function (val, oldVal) {
@@ -51,12 +53,14 @@
     computed: {
       ...mapGetters({
         getScrollRatio: 'getScrollRatio',
-        getIsExpandEditor: 'getIsExpandEditor'
+        getIsExpandEditor: 'getIsExpandEditor',
+        getIsEditorMode: 'getIsEditorMode'
       })
     },
     methods: {
       ...mapActions([
-        'actionSavePreviewScrollRatio'
+        'actionSavePreviewScrollRatio',
+        'actionSaveIsEditorMode'
       ]),
       addscrollwatching () {
         this.$refs.preview.addEventListener('scroll', () => {
@@ -71,6 +75,10 @@
 </script>
 
 <style>
+  img {
+    max-width: 100% !important;
+    height: auto !important;
+  }
 #newEditPreview {
   display: flex;
   flex-direction: row;

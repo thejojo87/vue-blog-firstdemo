@@ -1,7 +1,7 @@
 <template>
   <div class="blog_new_booksbar">
     <div class="home-wrap">
-      <a href="/" class="go-home">
+      <a v-on:click="backPage" class="go-home">
         <i class="fa fa-home" aria-hidden="true"></i>
         <span>回首页</span>blogs
       </a>
@@ -56,6 +56,9 @@
         'actionGetBooks',
         'actionSaveIsBackFromViewMode'
       ]),
+      backPage () {
+        history.go(-1)
+      },
       addNewBook () {
         this.isAddBook = !this.isAddBook
         if (this.newBookName) {

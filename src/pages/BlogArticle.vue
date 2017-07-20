@@ -13,9 +13,10 @@
           <a v-if="getCurrentArticle.attributes.tags"><el-tag type="primary">{{getCurrentArticle.attributes.tags}}</el-tag></a>
         </div>
         <div class="content">
-          <div>{{  getCurrentArticle.attributes.content  }}</div>
+          <div v-html="changeMarkdownStyle(getCurrentArticle.attributes.content)"></div>
         </div>
       </div>
+      <el-button v-if="getCurrentUser" @click="goback" id="back_button" type="success" icon="edit">返回</el-button>
     </div>
   </div>
 </template>
@@ -23,27 +24,36 @@
 <script>
   import sidebar from '@/components/blog/sidebar'
   import { mapGetters, mapActions } from 'vuex'
+  import markdown from '@/ext/markdown'
   export default {
     name: 'BlogArticle',
     components: {
       sidebar
     },
     created: function () {
-      console.log('文章主页被创造出来了')
-      console.log(this.getCurrentArticle)
-      console.log(this.getCurrentArticle.length)
-//      this.articles = this.getArticles
-//      this.currentPage = this.getCurrentPage
-//      this.displayArticles = service.getDisplayArticles(this.articles, this.currentPage, this.pageSize)
+      console.log('askldf')
+      console.log('askldf')
+      console.log('askldf')
+      console.log('askldf')
+      console.log('askldf')
+      console.log('askldf')
     },
     computed: {
       ...mapGetters({
-        getCurrentArticle: 'getCurrentArticle'
+        getCurrentArticle: 'getCurrentArticle',
+        getCurrentUser: 'getCurrentUser'
       })
     },
     methods: {
       ...mapActions([
-      ])
+      ]),
+      // 转换成markdown格式
+      changeMarkdownStyle (article) {
+        return markdown.render(article)
+      },
+      goback () {
+        history.go(-1)
+      }
     }
   }
 </script>
@@ -100,6 +110,16 @@
         color: #555
         font-weight: normal
         min-height: 600px
+        width: 100%
+        /*display: block*/
+        word-break: break-all
+        word-wrap: break-word
+        max-width: 100%
         /*margin-bottom: 100px*/
         clear: both
+
+    #back_button
+      position: fixed
+      top: 80px
+      left: 30px
 </style>
